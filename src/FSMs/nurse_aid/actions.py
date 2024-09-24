@@ -192,71 +192,52 @@ class Actions(BaseActions):
         self.app.last_state = 'SESSIONS'
         
         try:
-            # Continue the sessions while the session list isnt empty
-            while len(self.app.session_order_values) > 0:
-                
-                # Exit the session loop if the stop condition is met
-                if self.app.stop_condition:
-                    break
+            # Pre video interactions
+            await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                                        f'VOICE_VIDEO_1_{self.app.language}'])
+            await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                                        f'VOICE_VIDEO_2_{self.app.language}'])
 
-                await self.helpers.session_num(
-                                            self.app.session_order_values[0])
-                
-                # After every session declare the next session
-                if len(self.app.session_order_values) > 1:
-                    if self.app.language == 'HEBREW':
-                        await self.helpers.text_to_speech(
-                            text = f'כל הכבוד, החלק הבא הוא \
-                                {self.app.session_order_keys[1]}',
-                            language = 'he-IL', name = 'he-IL-Wavenet-D'
-                            )
-                    if self.app.language == 'ENGLISH':
-                        await self.helpers.text_to_speech(
-                            text = f'Congratulations, the next part is \
-                                            {self.app.session_order_keys[1]}',
-                            language = 'en-GB', name = 'en-GB-Wavenet-D'
-                            )
-                else:
-                    await self.helpers.play_predefined_sound_v2(
-                        self.helpers.combined_dict[
-                            f'VOICE_END_TREATMENT_{self.app.language}'])
-                
-                # Pop the session that just finished
-                self.app.session_order_keys.pop(0)
-                self.app.session_order_values.pop(0)
+            # Start opening videos one by one
+            video_params = UI_OPEN_VIDEO
+            video_params['async_callback'] = self.helpers.async_cb_video_links
+            for i in range(len(self.app.videos_dict)):
+                if self.app.videos_dict[f'video{i+1}']['link'] != 'no_value':
+                    await self.helpers.wait_for_button()
+                    video_params['url'] = \
+                                    self.app.videos_dict[f'video{i+1}']['link']
+                    for j in range(self.app.videos_dict[f'video{i+1}']['reps']):
+                        self.app.video_feedback = None 
 
-            # Get the user's feedback, prepare to navigate home
-            if not self.app.stop_condition:
-                self.app.sessions_successful = True
-                await self.helpers.get_user_feedback()
-                await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
-                await self.helpers.play_predefined_sound_v2(
-                    self.helpers.combined_dict[
-                        f'VOICE_AFTER_FEEDBACK_{self.app.language}'])
-                
+                        # Open video, wait until finished
+                        await self.app.ui.open_video(**video_params)
+                        while not self.app.video_feedback:
+                            await self.app.sleep(0.5)
+                        
+                        # Video finished interactions
+                        await self.app.ui.display_screen(**UI_CONGRATS)
+                        await self.helpers.play_predefined_sound_v2(
+                            self.helpers.combined_dict[
+                                    f'VOICE_NEXT_VIDEO_{self.app.language}'])
+
+            # Get user feedback
+            await self.helpers.get_user_feedback()
+            await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
+            await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                    f'VOICE_AFTER_FEEDBACK_{self.app.language}'])
+            self.app.sessions_successful = True
 
         except Exception as e:
-            # PLASTER
-            self.app.sessions_successful = True
-            self.app.log.debug(f'IM HERE PLASTER!')
-
+            self.app.sessions_successful = False
             self.app.current_error = e
             await self.helpers.error_messanger('SESSIONS',
                                                e,
-                                               self.app.sessions_attempts,
-                                               MAX_SESSIONS_ATTEMPTS)
-        
-        try:
-            await self.app.motion.move_linear(
-                                    distance = 0.25,
-                                    x_velocity = -0.1,
-                                    wait = True)
-            await self.app.motion.rotate(angle = 180.0,
-                                        angular_speed = 20.0,
-                                        wait = True,
-                                        enable_obstacles = False)
-        except Exception as e:
-                self.app.log.warn(f'Couldnt move backwards... Navigating home')
+                                               self.app.brief_attempts,
+                                               MAX_BRIEF_ATTEMPTS)
+
 
             
 

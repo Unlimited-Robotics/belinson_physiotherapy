@@ -115,14 +115,13 @@ class RayaApplication(RayaApplicationBase):
                 )
             self.log.info('Model enabled!')
 
-
-        self.log.warn('Registering skills')
-        self.skill_belinson_approach = self.register_skill(SkillBelinsonApproach)
-        await self.skill_belinson_approach.execute_setup(
-            setup_args={
-                'map_name' : self.map_name
-            }
-        )
+            self.log.warn('Registering skills')
+            self.skill_belinson_approach = self.register_skill(SkillBelinsonApproach)
+            await self.skill_belinson_approach.execute_setup(
+                setup_args={
+                    'map_name' : self.map_name
+                }
+            )
 
         self.log.info('Setting up Nurse Aid FSM...')
         self.fsm = FSM(app=self,name='nurse_aid',log_transitions=True)
@@ -393,25 +392,6 @@ class RayaApplication(RayaApplicationBase):
                             required = False,
                             help = 'Map name')
 
-        # Upper limit
-        parser.add_argument('-ul', '--upper_limb',
-                            type = str, default = 'no_value',
-                            required = False,
-                            help = 'Link to upper limb exercises')
-        
-
-        # Video link
-        parser.add_argument('-vl', '--video_op',
-                            type = str, default = 'no_value',
-                            required = False, help = 'Link to video')
-        
-
-        # Order of sessions
-        parser.add_argument('-so', '--sessions_order',
-                            type = dict,
-                            default = {'תרגול קוגנטיבי' : 1, 'צפייה בסרטונים' : 2, 'תרגילי גפה' : 3},
-                            required = False, help = 'order of sessions')
-
         # Task ID
         parser.add_argument('-tid', '--task_id',
                             type = str, default = 1,
@@ -422,32 +402,53 @@ class RayaApplication(RayaApplicationBase):
                             type = str, default = None,
                             required = False, help = 'name of the patient')
         
-        
-        # Memory Game Difficulty
-        parser.add_argument('-md', '--memory_game_difficulty',
-                            type = str, default = 'Easy',
-                            required = False, help = 'Memory game level')
-        
-        # Difference Game Difficulty
-        parser.add_argument('-dd', '--difference_game_difficulty',
-                            type = str, default = 'Easy',
-                            required = False, help = 'Difference game level')
-
-        # Trivia Game Difficulty
-        parser.add_argument('-td', '--trivia_game_difficulty',
-                            type = str, default = 'Easy',
-                            required = False, help = 'Trivia game level')
-        
-        # Simon Game Difficulty
-        parser.add_argument('-sd', '--simon_game_difficulty',
-                            type = str, default = 'Easy',
-                            required = False, help = 'Simon game level')
 
         # Language to speak
         parser.add_argument('-l', '--language',
                             type = str, default = 'hebrew',
                             required = False, help = 'language')
         
+        # Video arguments (link and number of repetitions)
+        parser.add_argument('-v1', '--watch_vid1',
+                            type = str, default = 'no_value',
+                            required = False, help = 'first video link')
+        
+        parser.add_argument('-r1', '--watch_vid1_repeat',
+                            type = int, default = 1,
+                            required = False, help = 'first video repetitions')
+        
+        parser.add_argument('-v2', '--watch_vid2',
+                            type = str, default = 'no_value',
+                            required = False, help = 'second video link')
+        
+        parser.add_argument('-r2', '--watch_vid2_repeat',
+                            type = int, default = 1,
+                            required = False, help = 'second video repetitions')
+        
+        parser.add_argument('-v3', '--watch_vid3',
+                            type = str, default = 'no_value',
+                            required = False, help = 'third video link')
+        
+        parser.add_argument('-r3', '--watch_vid3_repeat',
+                            type = int, default = 1,
+                            required = False, help = 'third video repetitions')
+        
+        parser.add_argument('-v4', '--watch_vid4',
+                            type = str, default = 'no_value',
+                            required = False, help = 'fourth video link')
+        
+        parser.add_argument('-r4', '--watch_vid4_repeat',
+                            type = int, default = 1,
+                            required = False, help = 'fourth video repetitions')
+        
+        parser.add_argument('-v5', '--watch_vid5',
+                            type = str, default = 'no_value',
+                            required = False, help = 'fifth video link')
+        
+        parser.add_argument('-r5', '--watch_vid5_repeat',
+                            type = int, default = 1,
+                            required = False, help = 'fifth video repetitions')
+
         # Debug flag
         parser.add_argument('-db', '--debug_flag',
                             type = bool, default = False,
@@ -460,15 +461,18 @@ class RayaApplication(RayaApplicationBase):
         self.y_initial = args.target_y
         self.angle_initial = args.target_angle
         self.map_name = args.map_name
-        self.video_link = args.video_op
-        self.exercise_link = args.upper_limb
-        self.sessions_order = args.sessions_order
         self.task_id = args.task_id
         self.patient_name = args.patient_name
-        self.memory_game_difficulty = args.memory_game_difficulty
-        self.trivia_game_difficulty = args.trivia_game_difficulty
-        self.difference_game_difficulty = args.difference_game_difficulty
-        self.simon_game_difficulty = args.simon_game_difficulty
+        self.v1 = args.watch_vid1
+        self.r1 = args.watch_vid1_repeat
+        self.v2 = args.watch_vid2
+        self.r2 = args.watch_vid2_repeat
+        self.v3 = args.watch_vid3
+        self.r3 = args.watch_vid3_repeat
+        self.v4 = args.watch_vid4
+        self.r4 = args.watch_vid4_repeat
+        self.v5 = args.watch_vid5
+        self.r5 = args.watch_vid5_repeat
         self.debug = args.debug_flag
         self.language = args.language.upper()
 
@@ -489,34 +493,23 @@ class RayaApplication(RayaApplicationBase):
                                prefix2 = self.patient_name
                                )
 
-
         # Take the relevant screens according to the chosen language
         globals().update(UI_language_dict[self.language])
-        
-        # Get the relevant sessions and compute the estimated time
-        self.treatment_time = 0
-        if self.memory_game_difficulty != 'no_value':
-            self.treatment_time += 3
-        
-        if self.difference_game_difficulty != 'no_value':
-            self.treatment_time += 3
-
-        if self.video_link == 'no_value':
-            del self.sessions_order['צפייה בסרטונים']
-
-        if self.exercise_link == 'no_value':
-            del self.sessions_order['תרגילי גפה']
-
-       
-        # Get a list of the keys and values of the sessions
-        # and also copy them incase the patient cancels the treatment
-        # then regrets
-        self.session_order_values = list(self.sessions_order.values())
-        
-        if self.language == 'HEBREW':
-            self.session_order_keys = list(self.sessions_order.keys())
-        
-        if self.language == 'ENGLISH':
-            self.session_order_keys = \
-                    [HEBREW_TENSES[key] for key in self.sessions_order.keys()]
-
+    
+        # Create a videos dictionary
+        self.videos_dict = {'video1' : {'link' : self.v1,
+                                        'reps' : int(self.r1)
+                                        },
+                            'video2' : {'link' : self.v2,
+                                        'reps' : int(self.r2)
+                                        },
+                            'video3' : {'link' : self.v3,
+                                        'reps' : int(self.r3)
+                                        },
+                            'video4' : {'link' : self.v4,
+                                        'reps' : int(self.r4)
+                                        },
+                            'video5' : {'link' : self.v5,
+                                        'reps' : int(self.r5)
+                                        },
+                            }

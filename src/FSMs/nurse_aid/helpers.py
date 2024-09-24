@@ -1998,6 +1998,20 @@ class Helpers:
         
         return distance
     
+    
+    async def prehome_motions(self):
+        try:
+            await self.app.motion.move_linear(
+                                    distance = 0.25,
+                                    x_velocity = -0.1,
+                                    wait = True)
+            await self.app.motion.rotate(angle = 180.0,
+                                        angular_speed = 20.0,
+                                        wait = True,
+                                        enable_obstacles = False)
+        except Exception as e:
+                self.app.log.warn(f'Failed at prehome motions - {e}')
+    
     #------------------------------- Callbacks -------------------------------#
 
     async def cb_belinson_approach_feedback(self, feedback):
@@ -2211,12 +2225,9 @@ class Helpers:
     # Async feedback for web links
     async def async_cb_video_links(self, error):
         '''Async callback for videos using links'''
-        if self.video_feedback != error:
-            self.app.log.info(f'Action: {error}')
+        self.app.video_feedback = error['action']
+        print(f'video feedback: {self.app.video_feedback}')
 
-        self.video_feedback = error['action']
-
-    
 
     async def async_cb_feedback_games(self, error):
         '''Async callback for games'''

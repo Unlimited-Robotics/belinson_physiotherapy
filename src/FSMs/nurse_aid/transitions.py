@@ -202,6 +202,7 @@ class Transitions(BaseTransitions):
         # If the sessions were successful, return home
         elif self.app.sessions_successful:
             self.helpers.reset_variables()
+            await self.helpers.prehome_motions()
             self.set_state('NAVIGATING_HOME')
         
         # If the sessions weren't successful and max attempts was reached,

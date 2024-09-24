@@ -196,11 +196,14 @@ UI_END_OF_SESSION = {
 
 UI_OPEN_VIDEO = {
     'title' : '',
-    'url' : 'https://www.youtube.com/watch?v=Kt-tLuszKBA',
+    'url' : '',
     'theme' : UI_THEME_TYPE.WHITE,
     'back_button_text' : '',
     'width' : '85%',
-    'height' : '75%'
+    'height' : '75%',
+    'close_after_finished' : True,
+    'wait' : False,
+    'custom_style' : CUSTOM_STYLE
     }
 
 

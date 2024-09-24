@@ -24,6 +24,6 @@ STATES_TIMEOUTS = {
 }
 
 # Debug flag to start at a specific state
-debug = False
+debug = True
 if debug:
-    INITIAL_STATE = 'DEBUG'
+    INITIAL_STATE = 'SESSIONS'

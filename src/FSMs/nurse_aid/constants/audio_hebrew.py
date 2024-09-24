@@ -594,6 +594,27 @@ VOICE_EXIT_CHOICE_STAY_HEBREW = {
     'file_name': 'VOICE_EXIT_CHOICE_STAY_HEBREW'
 }
 
+VOICE_PREVIDEO_1_HEBREW = {
+    'text': 'אתם עומדים לצפות בהדגמה של תרגילים לצורך שיפור התנועה והתפקוד. ביצוע התרגילים מצריך ישיבה זקופה ככל יכולתכם.',
+    'language': 'he-IL',
+    'name': 'he-IL-Wavenet-D',
+    'file_name': 'VOICE_PREVIDEO_1_HEBREW'
+}
+
+VOICE_PREVIDEO_2_HEBREW = {
+    'text': 'במידה ואתם חווים כאבים, או קושי רב בביצוע, אנא המתינו לסיום התרגיל ועברו לתרגיל הבא אחריו.',
+    'language': 'he-IL',
+    'name': 'he-IL-Wavenet-D',
+    'file_name': 'VOICE_PREVIDEO_2_HEBREW'
+}
+
+VOICE_NEXT_VIDEO_HEBREW = {
+    'text': 'כל הכבוד! עוברים לתרגול הבא.',
+    'language': 'he-IL',
+    'name': 'he-IL-Wavenet-D',
+    'file_name': 'VOICE_NEXT_VIDEO_HEBREW'
+}
+
 AUDIO_HEBREW = {
     'VOICE_ABORTED_BY_PATIENT_HEBREW': VOICE_ABORTED_BY_PATIENT_HEBREW,
     'VOICE_ABORTED_BY_STAFF_HEBREW': VOICE_ABORTED_BY_STAFF_HEBREW,
@@ -679,6 +700,9 @@ AUDIO_HEBREW = {
     'VOICE_RETRYING_TO_REACH_ROOM_HEBREW' : VOICE_RETRYING_TO_REACH_ROOM_HEBREW,
     'VOICE_COULDNT_REACH_ROOM_HEBREW' : VOICE_COULDNT_REACH_ROOM_HEBREW,
     'VOICE_EXIT_CHOICE_LEAVE_HEBREW' : VOICE_EXIT_CHOICE_LEAVE_HEBREW,
-    'VOICE_EXIT_CHOICE_STAY_HEBREW' : VOICE_EXIT_CHOICE_STAY_HEBREW
+    'VOICE_EXIT_CHOICE_STAY_HEBREW' : VOICE_EXIT_CHOICE_STAY_HEBREW,
+    'VOICE_PREVIDEO_1_HEBREW' : VOICE_PREVIDEO_1_HEBREW,
+    'VOICE_PREVIDEO_2_HEBREW' : VOICE_PREVIDEO_2_HEBREW,
+    'VOICE_NEXT_VIDEO_HEBREW' : VOICE_NEXT_VIDEO_HEBREW
 }
 
