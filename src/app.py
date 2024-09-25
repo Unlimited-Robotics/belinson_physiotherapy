@@ -475,6 +475,8 @@ class RayaApplication(RayaApplicationBase):
         self.r5 = args.watch_vid5_repeat
         self.debug = args.debug_flag
         self.language = args.language.upper()
+        
+        self.treatment_time = 6
 
         # Conver target goal to dict
         if args.target_goal:
@@ -488,10 +490,10 @@ class RayaApplication(RayaApplicationBase):
 
         # Update the audio constants file with the patient name
         self.audio_dict = AUDIO_language_dict[self.language]
-        self.update_audio_dict(audio_dict = self.audio_dict,
-                               prefix1 = 'dummy_patient_name',
-                               prefix2 = self.patient_name
-                               )
+        # self.update_audio_dict(audio_dict = self.audio_dict,
+        #                        prefix1 = 'dummy_patient_name',
+        #                        prefix2 = self.patient_name
+        #                        )
 
         # Take the relevant screens according to the chosen language
         globals().update(UI_language_dict[self.language])

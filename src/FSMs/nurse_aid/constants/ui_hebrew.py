@@ -526,7 +526,7 @@ UI_SELECT_WAND_OR_FINGER = {
 
 
 UI_SESSION_SCREEN = {
-        #'title' : f"אורך התרגול היום יהיה כ-{int(self.treatment_time)} דקות",
+        # 'title' : f"אורך התרגול היום יהיה כ-{int(self.treatment_time)} דקות",
         #'subtitle' : 'כולל תרגול קוגנטיבי, צפייה בסרטונים, ותרגילי גפה',
         'show_loader' : False,
         'back_button_text' : '',

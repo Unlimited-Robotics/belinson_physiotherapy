@@ -161,7 +161,7 @@ class Transitions(BaseTransitions):
         # If the user verification was successful, begin treatment brief
         elif self.app.user_verification_successful:
             self.helpers.reset_variables()
-            self.set_state('BRIEF')
+            self.set_state('SESSIONS')
 
         elif self.app.user_setup_attempts > MAX_USER_SETUP_ATTEMPTS:
             self.set_state('NAVIGATING_HOME')

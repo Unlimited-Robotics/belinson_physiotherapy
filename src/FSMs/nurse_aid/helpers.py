@@ -1127,7 +1127,6 @@ class Helpers:
                          self.play_predefined_sound_v2(self.combined_dict[
                              f'VOICE_INTRODUCTION_{self.app.language}']),
                          self.select_finger_or_wand(),
-                         self.verify_id(),
                          self.app.ui.display_animation(**UI_GUIDELINES),
                          self.play_predefined_sound_v2(
                              self.combined_dict[
@@ -1138,7 +1137,7 @@ class Helpers:
                                  f'VOICE_DANIEL_IS_A_MEME_{self.app.language}']),
                          self.app.ui.display_screen(**UI_STOP_CONDITION),
                          self.turn_on_leds(group = 'chest',
-                                        rep_time = 6,
+                                        rep_time = 8,
                                         color = 'red',
                                         animation = 'MOTION_2',
                                         wait = True
@@ -1147,9 +1146,9 @@ class Helpers:
                              self.combined_dict[
                                  f'VOICE_STOP_CONDITION_{self.app.language}']),
                          self.app.ui.display_animation(**UI_BEFORE_ACTIVITIES),
-                         self.play_predefined_sound_v2(
-                             self.combined_dict[
-                                 f'VOICE_BEFORE_ACTIVITIES_{self.app.language}'])
+                        #  self.play_predefined_sound_v2(
+                        #      self.combined_dict[
+                        #          f'VOICE_BEFORE_ACTIVITIES_{self.app.language}'])
                          ]
         
         # Run tasks, stop incase of stop flag
@@ -1157,6 +1156,7 @@ class Helpers:
             if self.app.stop_condition or self.app.bad_id or self.app.dev_mode_flag:
                 return
             else:
+                self.app.user_verification_successful = True
                 await task
 
 
@@ -1312,17 +1312,17 @@ class Helpers:
         '''      
         ui_session_screen = UI_SESSION_SCREEN
 
-        if self.app.language == 'HEBREW':
-            ui_session_screen['title'] = \
-                    f'אורך התרגול היום יהיה כ-{int(self.app.treatment_time)} דקות'
-            ui_session_screen['subtitle'] = \
-                                f'כולל {", ".join(self.app.session_order_keys)}'
+        # if self.app.language == 'HEBREW':
+        #     ui_session_screen['title'] = \
+        #             f'אורך התרגול היום יהיה כ-{int(self.app.treatment_time)} דקות'
+        #     ui_session_screen['subtitle'] = \
+        #                         f'כולל {", ".join(self.app.session_order_keys)}'
 
-        if self.app.language == 'ENGLISH':
-            ui_session_screen['title'] = \
-                f"Today's session will be {int(self.app.treatment_time)} minutes"
-            ui_session_screen['title'] = \
-                f"Including {', '.join(self.app.session_order_keys)}"
+        # if self.app.language == 'ENGLISH':
+        #     ui_session_screen['title'] = \
+        #         f"Today's session will be {int(self.app.treatment_time)} minutes"
+        #     ui_session_screen['title'] = \
+        #         f"Including {', '.join(self.app.session_order_keys)}"
 
         # Create tasks
         running_tasks = [
@@ -1335,8 +1335,8 @@ class Helpers:
             self.play_predefined_sound_v2(
                 self.combined_dict[f'VOICE_ACTIVITIES_{self.app.language}']),
             self.app.ui.display_screen(**UI_SESSION_SCREEN),
-            self.play_predefined_sound_v2(
-                self.combined_dict[f'VOICE_EXPLAIN_SESSION_{self.app.language}'])
+            # self.play_predefined_sound_v2(
+            #     self.combined_dict[f'VOICE_EXPLAIN_SESSION_{self.app.language}'])
             ]
         
         # Run tasks, stop incase of stop flag

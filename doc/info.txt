@@ -1,1 +1,1 @@
-rayasdk run -x 0.0 -y 0.0 -a 6.0 -m office__testing_area -usr נחניאלי, -v1 https://fms-s3-dev.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+3.mp4 -r1 2 -v2 https://www.youtube.com/watch?v=qQzdAsjWGPg&list=RDqQzdAsjWGPg&index=2
+rayasdk run -x 190.0 -y 1705.0 -a -90.0 -m Belinson__default -usr נחניאלי -v1 https://fms-s3-dev.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+3.mp4 -r1 2 -v2 https://daniel-assets.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+1.mp4
