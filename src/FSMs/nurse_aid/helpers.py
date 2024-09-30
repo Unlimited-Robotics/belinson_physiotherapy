@@ -483,6 +483,39 @@ class Helpers:
                                got exception - {e}")
 
 
+    async def play_sound_with_leds(self,
+                                   recording_name,
+                                   leds_data = None,
+                                   leds_repetitions = 1,
+                                   leds = True,
+                                   wait = True,
+                                   overwrite = True):
+        
+        try:
+            rec_time = REC_TIMES[recording_name.strip('.mp3')]
+            leds_repetitions = 0.3*rec_time
+        except Exception as e:
+            pass
+
+        if not leds_data:
+            leds_data = {
+                'group': 'head',
+                'color': 'blue',
+                'animation': 'MOTION_4',
+                'speed': 6,
+                'repetitions' : leds_repetitions,
+                'execution_control': LEDS_EXECUTION_CONTROL.OVERRIDE,
+            }
+
+        if leds:
+            await self.app.leds.animation(**leds_data, wait=False)
+        await self.app.sound.play_sound(name=recording_name,
+                                        wait = wait,
+                                        overwrite = overwrite,
+                                        callback_feedback_async = self.async_cb_feedback_sound,
+                                        callback_finish = self.cb_finish_sound
+                                        )
+
 
     async def get_buffers_dict(self,
                                 leds: bool = False,
@@ -2045,6 +2078,9 @@ class Helpers:
     async def async_cb_finish_sound(self, status, status_msg):
         self.app.can_play_sound = True
     
+
+    async def async_cb_feedback_sound(self, status, status_msg, status_id):
+        pass
 
 
     def cb_finish_sound(self, status, status_msg):
