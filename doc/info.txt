@@ -1,1 +1,1 @@
-rayasdk run -x 190.0 -y 1705.0 -a -90.0 -m Belinson__default -usr נחניאלי -v1 https://fms-s3-dev.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+3.mp4 -r1 2 -v2 https://daniel-assets.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+1.mp4
+rayasdk run -x 190.0 -y 1705.0 -a -90.0 -m Belinson__default -usr אדוה -v1 https://daniel-assets.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+1.mp4 -r1 2 -v2 https://daniel-assets.s3.eu-central-1.amazonaws.com/%D7%A8%D7%A6%D7%A3+5.mp4

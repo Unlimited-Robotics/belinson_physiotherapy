@@ -1126,7 +1126,6 @@ class Helpers:
         running_tasks = [self.app.ui.display_animation(**UI_INTRODUCTION),
                          self.play_predefined_sound_v2(self.combined_dict[
                              f'VOICE_INTRODUCTION_{self.app.language}']),
-                         self.select_finger_or_wand(),
                          self.app.ui.display_animation(**UI_GUIDELINES),
                          self.play_predefined_sound_v2(
                              self.combined_dict[

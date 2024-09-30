@@ -200,17 +200,42 @@ class Actions(BaseActions):
                 self.helpers.combined_dict[
                                         f'VOICE_PREVIDEO_2_{self.app.language}'])
 
+            # Start treatment
+            await self.helpers.wait_for_button(screen = UI_BEGIN,
+                                                    button_type = 'start'
+                                                    )
+
+            # Move backwards
+            try:
+                await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                    f'VOICE_MOVING_BACKWARDS_{self.app.language}']
+                    )
+                await self.app.motion.move_linear(distance = 0.2,
+                                                x_velocity = -0.1,
+                                                wait = True
+                                                )
+            except Exception as e:
+                print(e)
+
             # Start opening videos one by one
             video_params = UI_OPEN_VIDEO
             video_params['async_callback'] = self.helpers.async_cb_video_links
-            cnt = 1
             for i in range(len(self.app.videos_dict)):
                 if self.app.videos_dict[f'video{i+1}']['link'] != 'no_value':
-                    await self.helpers.wait_for_button(screen = UI_BEGIN,
-                                                    button_type = 'start'
-                                                    )
+
+                    # Specific video instructions - shoulder fracture
+                    if VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['link']] \
+                        == 'shoulder_fracture':
+                        await self.app.ui.display_screen(**UI_SHOULDER_FRACTURE)
+                        await self.helpers.play_predefined_sound_v2(
+                            self.helpers.combined_dict[
+                                f'VOICE_SHOULDER_FRACTURE_{self.app.language}'
+                            ]
+                        )
                     video_params['url'] = \
                                     self.app.videos_dict[f'video{i+1}']['link']
+                    
                     for j in range(self.app.videos_dict[f'video{i+1}']['reps']):
                         self.app.video_feedback = None 
 
@@ -222,17 +247,29 @@ class Actions(BaseActions):
                         # Video finished interactions
                         await self.app.ui.display_screen(**UI_CONGRATS)
 
+                if i < len(self.app.videos_dict)-1:
+                    await self.helpers.play_predefined_sound_v2(
+                        self.helpers.combined_dict[
+                                f'VOICE_NEXT_VIDEO_{self.app.language}'])
 
-                        print(f'cnt: {cnt}')
-                        if cnt < len(self.app.videos_dict) - 2:
-                            await self.helpers.play_predefined_sound_v2(
-                                self.helpers.combined_dict[
-                                        f'VOICE_NEXT_VIDEO_{self.app.language}'])
-                        else:
-                            await self.helpers.play_predefined_sound_v2(
-                                self.helpers.combined_dict[
-                                        f'VOICE_END_TREATMENT_{self.app.language}'])
-                cnt += 1
+            # End of treatment
+            await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                        f'VOICE_END_TREATMENT_{self.app.language}'])
+
+            # Move forwards
+            try:
+                await self.helpers.play_predefined_sound_v2(
+                    self.helpers.combined_dict[
+                        f'VOICE_MOVING_FORWARDS_{self.app.language}'
+                    ]
+                )
+                await self.app.motion.move_linear(distance = 0.15,
+                                                x_velocity = 0.075,
+                                                wait = True
+                                                )
+            except Exception as e:
+                print(e)
 
             # Get user feedback
             await self.helpers.get_user_feedback()
@@ -334,7 +371,7 @@ class Actions(BaseActions):
         self.helpers.decorate_methods()
         await self.helpers.create_listeners()
         await self.helpers.download_all_voices()
-        await self.helpers.get_buffers_dict(dynamic = False)   
+        await self.helpers.get_buffers_dict(dynamic = True)   
         self.helpers.temp_get_audio()
         
         await self.app.sleep(3)

@@ -645,6 +645,14 @@ UI_FEEDBACK_END_TREATMENT={
                         
     }
 
+UI_SHOULDER_FRACTURE = {
+    'title' : 'התרגול יהיה ללא משקל',
+    'subtitle' : 'אנא בצעו את התרגול ללא משקולות',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE
+}
 
 # User verification screen step 2
 UI_USER_VERIFY_2 ={
@@ -695,6 +703,9 @@ UI_REQUEST_FLEET_HELP = {
     'cancel_text' : 'חזור הביתה',
     'wait' : True
 }
+
+# Videos
+UI_VIDEO_1 = {}
 
 SCREENS_HEBREW = {'UI_NAVIGATING_TO_HOME' : UI_NAVIGATING_TO_HOME,
                     'UI_SCREEN_END' : UI_SCREEN_END,
