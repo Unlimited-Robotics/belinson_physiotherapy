@@ -35,17 +35,15 @@ class Transitions(BaseTransitions):
 
         # If the robot is not localized and max attempts was reached, abort.
         elif self.app.localizing_attempts > MAX_LOCALIZATION_ATTEMPTS:
-            await self.helpers.play_predefined_sound_v2[
-                self.helpers.combined_dict[
-                    f'VOICE_COULDNT_LOCALIZE_{self.app.language}']]
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_COULDNT_LOCALIZE_{self.app.language}')
             self.helpers.abort(**ERROR_LOCALIZING)
         
         # If the robot is not localized and max attempts wasnt reached,
         # try again
         else:
-            await self.helpers.play_predefined_sound_v2[
-                self.helpers.combined_dict[
-                    f'VOICE_RETRYING_TO_LOCALIZE_{self.app.language}']]
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_RETRYING_TO_LOCALIZE_{self.app.language}')
             self.app_last_state = 'SETUP'
             self.set_state('IDLE')
 
@@ -66,9 +64,8 @@ class Transitions(BaseTransitions):
         # If the nav wasn't successful and max attempts was reached, abort
         elif self.app.navigation_attempts > MAX_NAVIGATION_ATTEMPTS:
             fleet_response = await self.helpers.request_help_from_fleet()
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_COULDNT_REACH_ROOM_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_COULDNT_REACH_ROOM_{self.app.language}')
             if fleet_response:
                 self.helpers.reset_variables()
             else:
@@ -76,9 +73,8 @@ class Transitions(BaseTransitions):
 
         # If nav wasn't successful and max attempts wasnt reached, try again
         else:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_RETRYING_TO_REACH_ROOM_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_RETRYING_TO_REACH_ROOM_{self.app.language}')
             self.app.last_state = 'NAVIGATING_TO_ROOM'
             self.set_state('IDLE')
 
@@ -99,17 +95,15 @@ class Transitions(BaseTransitions):
         
         # If the approach wasn't successful and max attempts was reached, abort
         elif self.app.approach_attempts > MAX_APPROACH_ATTEMPTS:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_COULDNT_REACH_TARGET_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_COULDNT_REACH_TARGET_{self.app.language}')
             self.set_state('NAVIGATING_HOME')
 
         # If the approach wasn't successful and max attempts wasnt reached,
         # try again
         else:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
             self.set_state('NAVIGATING_TO_ROOM')
 
     
@@ -136,17 +130,15 @@ class Transitions(BaseTransitions):
         
         # If the approach wasn't successful and max attempts was reached, abort
         elif self.app.approach_attempts > MAX_APPROACH_ATTEMPTS:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_COULDNT_REACH_TARGET_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_COULDNT_REACH_TARGET_{self.app.language}')
             self.set_state('NAVIGATING_HOME')
 
         # If the approach wasn't successful and max attempts wasnt reached,
         # try again
         else:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
             self.set_state('')
 
 
@@ -264,8 +256,8 @@ class Transitions(BaseTransitions):
                 print(f'app exit choice: {self.app.exit_choice}')
                 print(f'reverse dict: {self.helpers.reverse_dict(EXIT_OPTION)}')
             
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[f'button_pressed_sound.wav'],
+            await self.helpers.play_sound_with_leds(
+                'button_pressed_sound.wav',
                 leds = False,
                 wait = False
                 )
@@ -283,9 +275,8 @@ class Transitions(BaseTransitions):
 
             if self.app.exit_choice == EXIT_OPTION['Sick'] or \
                 self.app.exit_choice == EXIT_OPTION['Other']:
-                    await self.helpers.play_predefined_sound_v2(
-                            self.helpers.combined_dict[
-                                f'VOICE_EXIT_CHOICE_LEAVE_{self.app.language}'])
+                    await self.helpers.play_sound_with_leds(
+                        f'VOICE_EXIT_CHOICE_LEAVE_{self.app.language}')
                     try:
                         await self.app.motion.move_linear(
                                                 distance = 0.25,
@@ -300,10 +291,9 @@ class Transitions(BaseTransitions):
                         
                     self.set_state('NAVIGATING_HOME')
             else:
-                 await self.helpers.play_predefined_sound_v2(
-                            self.helpers.combined_dict[
-                                f'VOICE_EXIT_CHOICE_STAY_{self.app.language}'])
-                 
+                await self.helpers.play_sound_with_leds(
+                    f'VOICE_EXIT_CHOICE_STAY_{self.app.language}')
+        
             self.helpers.reset_variables()
             self.app.session_order_values = list(self.app.sessions_order.values())
             self.app.session_order_keys = list(self.app.sessions_order.keys())

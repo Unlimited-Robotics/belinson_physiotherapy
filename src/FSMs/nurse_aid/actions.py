@@ -75,8 +75,8 @@ class Actions(BaseActions):
             
             # Inform the patient about Gary's arrival
             await self.app.ui.display_animation(**UI_ARRIVING)
-            await self.helpers.play_predefined_sound(
-                                        f'VOICE_ARRIVING_{self.app.language}')
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_ARRIVING_{self.app.language}')
             
             # Update the fleet and the app flag
             await self.helpers.update_fleet('הרובוט הגיע לחדר המטופל\ת')
@@ -193,13 +193,12 @@ class Actions(BaseActions):
         
         try:
             # Pre video interactions
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                                        f'VOICE_PREVIDEO_1_{self.app.language}'])
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                                        f'VOICE_PREVIDEO_2_{self.app.language}'])
-
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_PREVIDEO_1_{self.app.language}')
+            
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_PREVIDEO_2_{self.app.language}')
+            
             # Start treatment
             await self.helpers.wait_for_button(screen = UI_BEGIN,
                                                     button_type = 'start'
@@ -207,10 +206,9 @@ class Actions(BaseActions):
 
             # Move backwards
             try:
-                await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_MOVING_BACKWARDS_{self.app.language}']
-                    )
+                await self.helpers.play_sound_with_leds(
+                    f'VOICE_MOVING_BACKWARDS_{self.app.language}')
+               
                 await self.app.motion.move_linear(distance = 0.2,
                                                 x_velocity = -0.1,
                                                 wait = True
@@ -228,11 +226,9 @@ class Actions(BaseActions):
                     if VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['link']] \
                         == 'shoulder_fracture':
                         await self.app.ui.display_screen(**UI_SHOULDER_FRACTURE)
-                        await self.helpers.play_predefined_sound_v2(
-                            self.helpers.combined_dict[
-                                f'VOICE_SHOULDER_FRACTURE_{self.app.language}'
-                            ]
-                        )
+                        await self.helpers.play_sound_with_leds(
+                            f'VOICE_SHOULDER_FRACTURE_{self.app.language}')
+                    
                     video_params['url'] = \
                                     self.app.videos_dict[f'video{i+1}']['link']
                     
@@ -248,22 +244,19 @@ class Actions(BaseActions):
                         await self.app.ui.display_screen(**UI_CONGRATS)
 
                 if i < len(self.app.videos_dict)-1:
-                    await self.helpers.play_predefined_sound_v2(
-                        self.helpers.combined_dict[
-                                f'VOICE_NEXT_VIDEO_{self.app.language}'])
+                    await self.helpers.play_sound_with_leds(
+                        f'VOICE_NEXT_VIDEO_{self.app.language}')
+                   
 
             # End of treatment
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                        f'VOICE_END_TREATMENT_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_END_TREATMENT_{self.app.language}')
 
             # Move forwards
             try:
-                await self.helpers.play_predefined_sound_v2(
-                    self.helpers.combined_dict[
-                        f'VOICE_MOVING_FORWARDS_{self.app.language}'
-                    ]
-                )
+                await self.helpers.play_sound_with_leds(
+                    f'VOICE_MOVING_FORWARDS_{self.app.language}')
+                
                 await self.app.motion.move_linear(distance = 0.15,
                                                 x_velocity = 0.075,
                                                 wait = True
@@ -274,9 +267,8 @@ class Actions(BaseActions):
             # Get user feedback
             await self.helpers.get_user_feedback()
             await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_AFTER_FEEDBACK_{self.app.language}'])
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_AFTER_FEEDBACK_{self.app.language}')
             self.app.sessions_successful = True
 
         except Exception as e:
@@ -318,17 +310,15 @@ class Actions(BaseActions):
         # Treatment aborted by staff
         if self.app.stop_fleet:
             await self.app.ui.display_screen(**UI_TREATMENT_STOPPED_SCREEN)
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_ABORTED_BY_STAFF_{self.app.language}'],
-                        wait = False)
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_ABORTED_BY_STAFF_{self.app.language}',
+                    wait = False)
             self.app.stop_treatment = True
 
         else:
-            await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_ABORT_REASON_{self.app.language}'],
-                    wait = False)
+            await self.helpers.play_sound_with_leds(
+                    f'VOICE_ABORT_REASON_{self.app.language}')
+    
             await self.helpers.turn_on_leds(group = 'chest',
                                             color = 'red',
                                             animation = 'MOTION_2',

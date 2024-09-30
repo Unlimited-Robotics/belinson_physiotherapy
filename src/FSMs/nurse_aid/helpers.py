@@ -554,6 +554,40 @@ class Helpers:
         print(self.rec_times)
         
 
+    async def play_sound_with_leds(self,
+                                   recording_name,
+                                   leds_data = None,
+                                   leds_repetitions = 1,
+                                   leds = True,
+                                   wait = True,
+                                   overwrite = True):
+        
+        try:
+            rec_time = REC_TIMES[recording_name.strip('.mp3')]
+            leds_repetitions = 0.3*rec_time
+        except Exception as e:
+            pass
+
+        if not leds_data:
+            leds_data = {
+                'group': 'head',
+                'color': 'blue',
+                'animation': 'MOTION_4',
+                'speed': 6,
+                'repetitions' : leds_repetitions,
+                'execution_control': LEDS_EXECUTION_CONTROL.OVERRIDE,
+            }
+
+        if leds:
+            await self.app.leds.animation(**leds_data, wait=False)
+        await self.app.sound.play_sound(name=recording_name,
+                                        wait = wait,
+                                        overwrite = overwrite,
+                                        callback_feedback_async = self.async_cb_feedback_sound,
+                                        callback_finish = self.cb_finish_sound
+                                        )
+
+
 
     async def play_predefined_sound(self,
                                     recording_name: str,
@@ -654,21 +688,19 @@ class Helpers:
             if counter % rep_time == 0:
 
                 if button_type == 'start':
-                    await self.play_predefined_sound_v2(
-                        self.combined_dict[
-                            f'VOICE_PRESS_BUTTON_{self.app.language}'])
-
+                    await self.play_sound_with_leds(
+                        f'VOICE_PRESS_BUTTON_{self.app.language}')
+                   
                 if button_type == 'abort':
-                    await self.play_predefined_sound_v2(
-                        self.combined_dict[
-                            f'VOICE_ABORT_REASON_{self.app.language}'])
+                    await self.play_sound_with_leds(
+                        f'VOICE_ABORT_REASON_{self.app.language}')
 
             await self.app.sleep(1.0)
             counter += 1
 
         # Activate leds when button is pressed, reset the button feedback
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'button_pressed_sound.wav'],
+        await self.play_sound_with_leds(
+            f'button_pressed_sound',
             leds = False,
             wait = False
             )
@@ -860,8 +892,8 @@ class Helpers:
 
             # Inform patient of arrival
             await self.app.ui.display_animation(**UI_APPROACHING)
-            await self.play_predefined_sound_v2(
-                self.combined_dict[f'VOICE_APPROACHING_{self.app.language}'])
+            await self.play_sound_with_leds(
+                f'VOICE_APPROACHING_{self.app.language}')
 
             # Navigate towards the patient
             try:
@@ -929,16 +961,15 @@ class Helpers:
             )
         
         # Inform the patient, give the model a few seconds to detect
-        await self.play_predefined_sound_v2(
-            self.combined_dict[
-                f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}'])
+        await self.play_sound_with_leds(
+            f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}')
+
         await self.app.sleep(3.0)
         
         # Scan backwards, left and right, if you cant find a detection
         if not self.app.feet_detected:
-            await self.play_predefined_sound_v2(
-                self.combined_dict[
-                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}'])
+            await self.play_sound_with_leds(
+                f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
             await self.scan_for_detection()
 
         # Move forwards as long as you detect feet
@@ -1073,19 +1104,17 @@ class Helpers:
                 break
 
             if counter%20 == 0:
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_FEEDBACK_{self.app.language}'],
-                        wait = False
-                        )
-
+                await self.play_sound_with_leds(
+                    f'VOICE_FEEDBACK_{self.app.language}',
+                    wait = False
+                    )
             counter += 1
             await self.app.sleep(1)
         
         end_time = time.time()
         self.app.treatment_time = end_time - start_time
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'button_pressed_sound.wav'],
+        await self.play_sound_with_leds(
+            'button_pressed_sound',
             leds = False,
             wait = False
             )
@@ -1099,15 +1128,16 @@ class Helpers:
             USER_FEEDBACK = {5 : 'גבוהה', 6 : 'בינונית', 7 : 'נמוכה'}
 
             if USER_FEEDBACK[user_choice] == 'גבוהה':
-                await self.play_predefined_sound(
-                                    f'VOICE_FEEDBACK_GOOD_{self.app.language}')
+                await self.play_sound_with_leds(
+                    f'VOICE_FEEDBACK_GOOD_{self.app.language}')
+               
             elif USER_FEEDBACK[user_choice] == 'בינונית':
-                await self.play_predefined_sound(
-                                    f'VOICE_FEEDBACK_OKAY_{self.app.language}')
+                await self.play_sound_with_leds(
+                    f'VOICE_FEEDBACK_OKAY_{self.app.language}')
+               
             elif USER_FEEDBACK[user_choice] == 'נמוכה':
-                await self.play_predefined_sound(
-                                    f'VOICE_FEEDBACK_BAD_{self.app.language}')
-
+                await self.play_sound_with_leds(
+                    f'VOICE_FEEDBACK_BAD_{self.app.language}')
 
             await self.update_fleet(f"המטופל נתן פידבק {USER_FEEDBACK[user_choice]}")
 
@@ -1164,19 +1194,17 @@ class Helpers:
 
         # Reset previous feedbacks, display the choice selector
         self.reset_user_feedbacks()
-        await self.play_predefined_sound_v2(
-            self.combined_dict[
-                f'VOICE_EXPLAIN_FINGER_OR_WAND_{self.app.language}'])
+        await self.play_sound_with_leds(
+                    f'VOICE_EXPLAIN_FINGER_OR_WAND_{self.app.language}')
         await self.app.ui.display_choice_selector(
                                                 **UI_SELECT_WAND_OR_FINGER,
                                                 callback = self.cb_ui_feedback,
                                                 wait = False
                                                 )
-        await self.play_predefined_sound_v2(
-            self.combined_dict[
-                f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}'],
-                wait = False
-                )
+        await self.play_sound_with_leds(
+                    f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
+                    wait = False
+                    )
 
         # Repeat the instructions every rep_time until button is pressed
         start_time = time.time()
@@ -1187,12 +1215,10 @@ class Helpers:
                 break
 
             if counter%INSTRUCTIONS_REP_TIME  == 0:
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}'],
-                        wait = False
-                        )
-                                                 
+                await self.play_sound_with_leds(
+                    f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
+                    wait = False
+                    )                                   
             await self.app.sleep(1)   
             counter += 1
 
@@ -1201,8 +1227,8 @@ class Helpers:
         self.app.log.info(f"{self.app.ui_button_feedback}")
         
         try:
-            await self.play_predefined_sound_v2(
-                self.combined_dict[f'button_pressed_sound.wav'],
+            await self.play_sound_with_leds(
+                'button_pressed_sound.wav',
                 leds = False,
                 wait = False
                 )
@@ -1216,9 +1242,8 @@ class Helpers:
                                                          TOUCH_ITEM['Wand']:
                 self.app.touch_item = 'Wand'
                 await self.app.ui.display_animation(**UI_TAKE_STICK)
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_TAKE_STICK_{self.app.language}'])
+                await self.play_sound_with_leds(
+                    f'VOICE_TAKE_STICK_{self.app.language}')
                 await self.app.sleep(3)
                 
             elif self.app.ui_button_feedback['selected_option']['id'] == \
@@ -1250,11 +1275,10 @@ class Helpers:
         await self.app.ui.display_screen(**verification_screen)
         await self.app.sleep(0.5)
 
-        await self.play_predefined_sound_v2(
-            self.combined_dict[
-                f'VOICE_VERIFY_PATIENT_{self.app.language}'],
-                wait = False
-                )
+        await self.play_sound_with_leds(
+                    f'VOICE_VERIFY_PATIENT_{self.app.language}',
+                    wait = False
+                    )
         await self.app.sleep(1.0)
         await self.app.ui.display_choice_selector(
                                                 **UI_USER_VERIFY_2,
@@ -1271,17 +1295,15 @@ class Helpers:
                 break
                 
             if counter%INSTRUCTIONS_REP_TIME == 0:
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_VERIFY_PATIENT_{self.app.language}'])
+                await self.play_sound_with_leds(
+                    f'VOICE_VERIFY_PATIENT_{self.app.language}')
                 
-
             counter += 1
             await self.app.sleep(1)
         
         # The button was pressed or timeout occured
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'button_pressed_sound.wav'],
+        await self.play_sound_with_leds(
+            'button_pressed_sound.wav',
             leds = False,
             wait = False
             )
@@ -1295,9 +1317,8 @@ class Helpers:
         if self.app.ui_button_feedback is None or \
             self.app.ui_button_feedback_id['selected_option']['id'] == \
                                                         USER_VERIFY['False']:
-            await self.play_predefined_sound_v2(
-                self.combined_dict[
-                    f'VOICE_ABORTED_BY_PATIENT_{self.app.language}'])
+            await self.play_sound_with_leds(
+                    f'VOICE_ABORTED_BY_PATIENT_{self.app.language}')
             self.app.bad_id = True
             return
         
@@ -1467,7 +1488,7 @@ class Helpers:
     async def upper_limb_session(self):
         await self.update_fleet('התחיל תרגול גפה עליונה')
         await self.exercise_instructions(full_instructions = True)
-        await self.play_predefined_sound(f'VOICE_MOVING_BACKWARDS_{self.app.language}')
+        await self.play_sound_with_leds(f'VOICE_MOVING_BACKWARDS_{self.app.language}')
         await self.app.motion.set_velocity(x_velocity = -0.03,
                                            y_velocity = 0.0,
                                            angular_velocity = 0.0,
@@ -1476,7 +1497,7 @@ class Helpers:
                                            wait = True
                                            )
         await self.create_session(link = self.app.exercise_link, video = True)
-        await self.play_predefined_sound(f'VOICE_MOVING_FORWARDS_{self.app.language}')
+        await self.play_sound_with_leds(f'VOICE_MOVING_FORWARDS_{self.app.language}')
         await self.app.motion.set_velocity(x_velocity = 0.03,
                                            y_velocity = 0.0,
                                            angular_velocity = 0.0,
@@ -1491,22 +1512,22 @@ class Helpers:
         # Ask patient to return the wand in the end of a screen exercise
         if return_wand is True:
             await self.app.ui.display_animation(UI_RETURN_STICK)
-            await self.play_predefined_sound(f'VOICE_RETURN_STICK_{self.app.language}')
+            await self.play_sound_with_leds(f'VOICE_RETURN_STICK_{self.app.language}')
             await self.app.sleep(0.5)
 
         # Give full instructions when not doing a screen exercise
         elif full_instructions is True:
             running_tasks = [
                 self.app.ui.display_animation(UI_SESSION_EMPHASES),
-                self.play_predefined_sound(f'VOICE_SESSION_EMPHASES_{self.app.language}'),
+                self.play_sound_with_leds(f'VOICE_SESSION_EMPHASES_{self.app.language}'),
                 self.app.ui.display_animation(UI_SIT_STRAIGHT),
-                self.play_predefined_sound(f'VOICE_SIT_STRAIGHT_{self.app.language}'),
+                self.play_sound_with_leds(f'VOICE_SIT_STRAIGHT_{self.app.language}'),
                 self.app.ui.display_animation(UI_LEGS_ON_FLOOR),
-                self.play_predefined_sound(f'VOICE_LEGS_ON_FLOOR_{self.app.language}'),
+                self.play_sound_with_leds(f'VOICE_LEGS_ON_FLOOR_{self.app.language}'),
                 self.app.ui.display_animation(UI_STRAIGHT_HEAD),
-                self.play_predefined_sound(f'VOICE_STRAIGHT_HEAD_{self.app.language}'),
+                self.play_sound_with_leds(f'VOICE_STRAIGHT_HEAD_{self.app.language}'),
                 self.app.ui.display_animation(UI_NO_TIME_FOR_CAUTION),
-                self.play_predefined_sound(f'VOICE_NO_TIME_FOR_CAUTION_{self.app.language}')
+                self.play_sound_with_leds(f'VOICE_NO_TIME_FOR_CAUTION_{self.app.language}')
                 ]
 
             # Run tasks, stop incase of stop flag
@@ -1546,9 +1567,8 @@ class Helpers:
         )
 
         # Explain the game
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_DIFFERENCE_GAME_{self.app.language}'])
-            
+        await self.play_sound_with_leds(
+                    f'VOICE_DIFFERENCE_GAME_{self.app.language}')
 
         # Play the game
         last_stage = self.app.games_feedback['stage']
@@ -1560,23 +1580,21 @@ class Helpers:
                                     last_feedback != self.app.games_feedback:
                 last_stage = self.app.games_feedback['stage']
                 last_feedback = self.app.games_feedback.copy()
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_CONTINUE_STAGE_{self.app.language}'])
-
+                await self.play_sound_with_leds(
+                    f'VOICE_CONTINUE_STAGE_{self.app.language}')
+            
             # Correct guess feedback
             elif self.app.games_feedback['last_try_success'] and  \
                                     last_feedback != self.app.games_feedback:
                 last_feedback = self.app.games_feedback.copy()
 
                 if self.app.games_feedback['successful_guess'] == 1:
-                    await self.play_predefined_sound_v2(
-                        self.combined_dict[
-                            f'VOICE_CARD_MATCH_1_{self.app.language}'])
+                    await self.play_sound_with_leds(
+                        f'VOICE_CARD_MATCH_1_{self.app.language}')
+        
                 else:
                     voice = self.choose_random_success_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice])
+                    await self.play_sound_with_leds(voice)
 
             # Incorrect guess feedback
             elif not self.app.games_feedback['last_try_success'] and \
@@ -1585,8 +1603,7 @@ class Helpers:
 
                 if i%2 == 0:
                     voice = self.choose_random_fail_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice])
+                    await self.play_sound_with_leds(voice)
                 i += 1
                
 
@@ -1597,9 +1614,9 @@ class Helpers:
             await self.app.sleep(1.0)
 
         # Congratulate the patient upon game completion
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_GAME_COMPLETED_{self.app.language}'])
-
+        await self.play_sound_with_leds(
+                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+        
 
     async def memory_game(self):
         '''Open a memory game session'''
@@ -1626,8 +1643,8 @@ class Helpers:
                         )
         
         # Explain the game
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_MEMORY_GAME_{self.app.language}'])
+        await self.play_sound_with_leds(
+                    f'VOICE_MEMORY_GAME_{self.app.language}')
        
         # Give the patient feedback until the game is complete
         last_feedback = self.app.games_feedback.copy()
@@ -1638,18 +1655,16 @@ class Helpers:
                                      self.app.games_feedback != last_feedback:
                 last_feedback = self.app.games_feedback.copy()
                 if self.app.games_feedback['completed_cards'] == 2:
-                    await self.play_predefined_sound_v2(
-                        self.combined_dict[
-                            f'VOICE_CARD_MATCH_1_{self.app.language}'])
+                    await self.play_sound_with_leds(
+                        f'VOICE_CARD_MATCH_1_{self.app.language}')
                 elif self.app.games_feedback['completed_cards'] == \
                                  self.app.games_feedback['amount_of_cards']-2:
-                    await self.play_predefined_sound_v2(
-                        self.combined_dict[
-                            f'VOICE_CARD_MATCH_LAST_{self.app.language}'])
+                    await self.play_sound_with_leds(
+                        f'VOICE_CARD_MATCH_LAST_{self.app.language}')
+                   
                 else:
                     voice = self.choose_random_success_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice])
+                    await self.play_sound_with_leds(voice)
         
 
             # Incorrect card match feedback
@@ -1659,11 +1674,9 @@ class Helpers:
                 last_feedback = self.app.games_feedback.copy()        
                 if i%2 == 0:
                     voice = self.choose_random_fail_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice])
+                    await self.play_sound_with_leds(voice)
                 else:
-                    await self.play_predefined_sound_v2(
-                                    self.combined_dict['wrong_answer_sound'])
+                    await self.play_sound_with_leds('wrong_answer_sound')
                 i += 1
         
 
@@ -1674,9 +1687,9 @@ class Helpers:
             await self.app.sleep(1.0)
 
         # Congratulate the patient upon game completion
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_GAME_COMPLETED_{self.app.language}'])
-    
+        await self.play_sound_with_leds(
+                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+
 
 
     async def trivia_game(self):
@@ -1705,8 +1718,8 @@ class Helpers:
                         finish_callback_async = self.async_cb_finish_games,
                         custom_style = CUSTOM_STYLE_GAMES)
             
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_TRIVIA_GAME_{self.app.language}'])
+        await self.play_sound_with_leds(
+                    f'VOICE_TRIVIA_GAME_{self.app.language}')
 
         # Repeat the instructions every 10 seconds until the game started
         num_instructions_reps = 0
@@ -1718,9 +1731,8 @@ class Helpers:
             current_time = time.time()
             if abs(current_time - start_time) >= 30:
                 num_instructions_reps += 1
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_TRIVIA_GAME_{self.app.language}'])
+                await self.play_sound_with_leds(
+                    f'VOICE_TRIVIA_GAME_{self.app.language}')
                 start_time = time.time()
 
         # Wait the countdown, speak the question
@@ -1742,8 +1754,8 @@ class Helpers:
             await self.app.sleep(0.1)
 
         last_feedback = self.app.games_feedback.copy()
-        await self.play_predefined_sound_v2(self.combined_dict[f'VOICE_TRIVIA_Q1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}'])
-        await self.play_predefined_sound_v2(self.combined_dict[f'VOICE_TRIVIA_A1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}'], wait = False)
+        await self.play_sound_with_leds(f'VOICE_TRIVIA_Q1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
+        await self.play_sound_with_leds(f'VOICE_TRIVIA_A1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
 
         # Measure the patient response time between instructions and start
         self.app.memory_game_response_time = current_time - start_time
@@ -1757,9 +1769,7 @@ class Helpers:
 
                 last_feedback = self.app.games_feedback.copy()       
                 voice = self.choose_random_success_voice()
-                await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice],
-                                                    wait = True)
+                await self.play_sound_with_leds(voice)
 
                 loader_start_time, loader_current_time = time.time(), time.time()
                 try:
@@ -1780,8 +1790,8 @@ class Helpers:
                     await self.app.sleep(0.1)
 
                 if j <= 3:
-                    await self.play_predefined_sound_v2(self.combined_dict[f'VOICE_TRIVIA_Q{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}'])
-                    await self.play_predefined_sound_v2(self.combined_dict[f'VOICE_TRIVIA_A{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}'], wait = False)
+                    await self.play_sound_with_leds(f'VOICE_TRIVIA_Q{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
+                    await self.play_sound_with_leds(f'VOICE_TRIVIA_A{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
                 j += 1
 
             # Incorrect card match feedback
@@ -1791,9 +1801,7 @@ class Helpers:
                
                 if i%2 == 0:
                     voice = self.choose_random_fail_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice],
-                                                    wait = False)
+                    await self.play_sound_with_leds(voice, wait = False)
                 i += 1
             
             # Break if stop condition
@@ -1804,9 +1812,9 @@ class Helpers:
             await self.app.sleep(1.0)
 
         # Congratulate the patient upon game completion
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_GAME_COMPLETED_{self.app.language}'])
-
+        await self.play_sound_with_leds(
+                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+        
         # Analytics
         end_time = time.time()
         self.app.trivia_game_time = end_time - start_time
@@ -1836,9 +1844,9 @@ class Helpers:
                         )
         
         # Explain the game
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_SIMON_GAME_{self.app.language}'])
-
+        await self.play_sound_with_leds(
+                    f'VOICE_SIMON_GAME_{self.app.language}')
+       
         # Repeat the instructions every 10 seconds until the game started
         num_instructions_reps = 0
         last_feedback = self.app.games_feedback
@@ -1849,8 +1857,8 @@ class Helpers:
             current_time = time.time()
             if abs(current_time - start_time) >= 30:
                 num_instructions_reps += 1
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[f'VOICE_SIMON_GAME_{self.app.language}'])
+                await self.play_sound_with_leds(
+                    f'VOICE_SIMON_GAME_{self.app.language}')
                 start_time = time.time()
         last_feedback = self.app.games_feedback
 
@@ -1866,8 +1874,7 @@ class Helpers:
                 last_feedback = self.app.games_feedback.copy()                    
                 if i%2 == 0:
                     voice = self.choose_random_fail_voice()
-                    await self.play_predefined_sound_v2(
-                                                    self.combined_dict[voice])
+                    await self.play_sound_with_leds(voice)
                 i += 1
 
             # Break if stop condition
@@ -1878,9 +1885,9 @@ class Helpers:
             await self.app.sleep(1.0)
 
         # Congratulate the patient upon game completion
-        await self.play_predefined_sound_v2(
-            self.combined_dict[f'VOICE_GAME_COMPLETED_{self.app.language}'])
-
+        await self.play_sound_with_leds(
+                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+        
 
 
     async def scan_for_detection(self):
@@ -2018,14 +2025,13 @@ class Helpers:
         self.app.log.debug(feedback)
         if feedback['status_msg'] == 1:
             await self.app.ui.display_animation(**UI_APPROACHING)
-            await self.play_predefined_sound_v2(
-                self.combined_dict[f'VOICE_APPROACHING_{self.app.language}'])
-            
+            await self.play_sound_with_leds(
+                    f'VOICE_APPROACHING_{self.app.language}')
+          
         if feedback['status_msg'] == 2:
-            await self.play_predefined_sound_v2(
-            self.combined_dict[
-                f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}'])
-
+            await self.play_sound_with_leds(
+                    f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}')
+    
     
     def callback_all_faces(self, detections, image):
         if detections:
@@ -2045,6 +2051,9 @@ class Helpers:
     async def async_cb_finish_sound(self, status, status_msg):
         self.app.can_play_sound = True
     
+
+    async def async_cb_feedback_sound(self, status, status_msg, status_id):
+        pass
 
 
     def cb_finish_sound(self, status, status_msg):
@@ -2186,10 +2195,9 @@ class Helpers:
         if error == OBSTACLE_DICT['Waiting obstacle to move']:
             self.app.obstacle_counter += 1
             if self.app.obstacle_counter%3 == 0:
-                await self.play_predefined_sound_v2(
-                    self.combined_dict[
-                        f'VOICE_PLEASE_MOVE_{self.app.language}'])
-
+                await self.play_sound_with_leds(
+                    f'VOICE_PLEASE_MOVE_{self.app.language}')
+             
         # Set the current feedback to the error message
         self.nav_feedback = error_msg
 
