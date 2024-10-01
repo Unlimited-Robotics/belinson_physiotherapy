@@ -323,4 +323,4 @@ class Transitions(BaseTransitions):
     
 
     async def DEBUG(self):
-        self.set_state('USER_SETUP')
+        self.set_state('END')
