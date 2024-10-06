@@ -227,11 +227,14 @@ class Actions(BaseActions):
                 if self.app.videos_dict[f'video{i+1}']['link'] != 'no_value':
 
                     # Specific video instructions - shoulder fracture
-                    if VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['link']] \
-                        == 'shoulder_fracture':
-                        await self.app.ui.display_screen(**UI_SHOULDER_FRACTURE)
-                        await self.helpers.play_sound_with_leds(
-                            f'VOICE_SHOULDER_FRACTURE_{self.app.language}')
+                    try:
+                        if VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['link']] \
+                            == 'shoulder_fracture':
+                            await self.app.ui.display_screen(**UI_SHOULDER_FRACTURE)
+                            await self.helpers.play_sound_with_leds(
+                                f'VOICE_SHOULDER_FRACTURE_{self.app.language}')
+                    except Exception as e:
+                        pass
                     
                     video_params['url'] = \
                                     self.app.videos_dict[f'video{i+1}']['link']
