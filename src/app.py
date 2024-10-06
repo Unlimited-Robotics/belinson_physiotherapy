@@ -119,7 +119,8 @@ class RayaApplication(RayaApplicationBase):
             self.skill_belinson_approach = self.register_skill(SkillBelinsonApproach)
             await self.skill_belinson_approach.execute_setup(
                 setup_args={
-                    'map_name' : self.map_name
+                    'map_name' : self.map_name,
+                    'only_face' : True
                 }
             )
 
@@ -515,3 +516,7 @@ class RayaApplication(RayaApplicationBase):
                                         'reps' : int(self.r5)
                                         },
                             }
+        self.num_videos = 0
+        for item in self.videos_dict:
+            if self.videos_dict[item]['name'] != 'no_value':
+                self.num_videos += 1

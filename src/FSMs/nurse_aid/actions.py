@@ -106,7 +106,8 @@ class Actions(BaseActions):
             try:
                 await self.app.skill_belinson_approach.execute_main(
                     execute_args={
-                        'face_angle' : self.app.angle_initial
+                        'face_angle' : self.app.angle_initial,
+                        'distance_to_goal' : 1.0
                     },
                     callback_feedback=self.helpers.cb_belinson_approach_feedback
                 )
@@ -199,24 +200,30 @@ class Actions(BaseActions):
             await self.helpers.play_predefined_sound_v2(
                 self.helpers.combined_dict[
                                         f'VOICE_PREVIDEO_2_{self.app.language}'])
+            
+            await self.helpers.play_predefined_sound_v2(
+                self.helpers.combined_dict[
+                    f'VOICE_MIMIC_VIDEO_HEBREW'
+                ]
+            )
 
             # Start treatment
-            await self.helpers.wait_for_button(screen = UI_BEGIN,
-                                                    button_type = 'start'
-                                                    )
+            # await self.helpers.wait_for_button(screen = UI_BEGIN,
+            #                                     button_type = 'start'
+            #                                     )
 
-            # Move backwards
-            try:
-                await self.helpers.play_predefined_sound_v2(
-                self.helpers.combined_dict[
-                    f'VOICE_MOVING_BACKWARDS_{self.app.language}']
-                    )
-                await self.app.motion.move_linear(distance = 0.25,
-                                                x_velocity = -0.125,
-                                                wait = True
-                                                )
-            except Exception as e:
-                print(e)
+            # # Move backwards
+            # try:
+            #     await self.helpers.play_predefined_sound_v2(
+            #     self.helpers.combined_dict[
+            #         f'VOICE_MOVING_BACKWARDS_{self.app.language}']
+            #         )
+            #     await self.app.motion.move_linear(distance = 0.25,
+            #                                     x_velocity = -0.125,
+            #                                     wait = True
+            #                                     )
+            # except Exception as e:
+            #     print(e)
 
             # Start opening videos one by one
             video_params = UI_OPEN_VIDEO
@@ -251,8 +258,8 @@ class Actions(BaseActions):
                         while not self.app.video_feedback:
                             await self.app.sleep(0.5)
 
-                    if i < len(self.app.videos_dict)-1:
-                        await self.app.ui.display_screen(**UI_CONGRATS)
+                    await self.app.ui.display_screen(**UI_CONGRATS)
+                    if i < self.app.num_videos - 1:
                         await self.helpers.play_predefined_sound_v2(
                             self.helpers.combined_dict[
                                     f'VOICE_NEXT_VIDEO_{self.app.language}'])
@@ -263,21 +270,21 @@ class Actions(BaseActions):
                         f'VOICE_END_TREATMENT_{self.app.language}'])
 
             # Move forwards
-            try:
-                await self.helpers.play_predefined_sound_v2(
-                    self.helpers.combined_dict[
-                        f'VOICE_MOVING_FORWARDS_{self.app.language}'
-                    ]
-                )
-                await self.app.motion.move_linear(distance = 0.2,
-                                                x_velocity = 0.1,
-                                                wait = True
-                                                )
-            except Exception as e:
-                print(e)
+            # try:
+            #     await self.helpers.play_predefined_sound_v2(
+            #         self.helpers.combined_dict[
+            #             f'VOICE_MOVING_FORWARDS_{self.app.language}'
+            #         ]
+            #     )
+            #     await self.app.motion.move_linear(distance = 0.2,
+            #                                     x_velocity = 0.1,
+            #                                     wait = True
+            #                                     )
+            # except Exception as e:
+            #     print(e)
 
             # Get user feedback
-            await self.helpers.get_user_feedback()
+            # await self.helpers.get_user_feedback()
             await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
             await self.helpers.play_predefined_sound_v2(
                 self.helpers.combined_dict[
