@@ -563,8 +563,8 @@ class Helpers:
                                    overwrite = True):
         
         try:
-            rec_time = REC_TIMES[recording_name]
-            leds_repetitions = 0.3*rec_time
+            rec_time = REC_TIMES[f'{recording_name}.mp3']
+            leds_repetitions = int(0.3*rec_time)
         except Exception as e:
             pass
 
