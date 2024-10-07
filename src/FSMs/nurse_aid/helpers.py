@@ -563,7 +563,7 @@ class Helpers:
                                    overwrite = True):
         
         try:
-            rec_time = REC_TIMES[recording_name.strip('.mp3')]
+            rec_time = REC_TIMES[recording_name]
             leds_repetitions = 0.3*rec_time
         except Exception as e:
             pass
@@ -1154,16 +1154,14 @@ class Helpers:
 
         # Create all of the tasks
         running_tasks = [self.app.ui.display_animation(**UI_INTRODUCTION),
-                         self.play_predefined_sound_v2(self.combined_dict[
-                             f'VOICE_INTRODUCTION_{self.app.language}']),
+                         self.play_sound_with_leds(
+                             f'VOICE_INTRODUCTION_{self.app.language}'),
                          self.app.ui.display_animation(**UI_GUIDELINES),
-                         self.play_predefined_sound_v2(
-                             self.combined_dict[
-                                 f'VOICE_GUIDELINES_{self.app.language}']),
+                         self.play_sound_with_leds(
+                                 f'VOICE_GUIDELINES_{self.app.language}'),
                          self.app.ui.display_animation(**UI_DANIEL_IS_A_MEME),
-                         self.play_predefined_sound_v2(
-                             self.combined_dict[
-                                 f'VOICE_DANIEL_IS_A_MEME_{self.app.language}']),
+                         self.play_sound_with_leds(
+                             f'VOICE_DANIEL_IS_A_MEME_{self.app.language}'),
                          self.app.ui.display_screen(**UI_STOP_CONDITION),
                          self.turn_on_leds(group = 'chest',
                                         rep_time = 8,
@@ -1171,13 +1169,9 @@ class Helpers:
                                         animation = 'MOTION_2',
                                         wait = True
                                         ),
-                         self.play_predefined_sound_v2(
-                             self.combined_dict[
-                                 f'VOICE_STOP_CONDITION_{self.app.language}']),
-                         self.app.ui.display_animation(**UI_BEFORE_ACTIVITIES),
-                        #  self.play_predefined_sound_v2(
-                        #      self.combined_dict[
-                        #          f'VOICE_BEFORE_ACTIVITIES_{self.app.language}'])
+                         self.play_sound_with_leds(
+                             f'VOICE_STOP_CONDITION_{self.app.language}'),
+                         self.app.ui.display_animation(**UI_BEFORE_ACTIVITIES)
                          ]
         
         # Run tasks, stop incase of stop flag
@@ -1349,11 +1343,9 @@ class Helpers:
             self.app.ui.display_animation(**UI_GOOD_DAY),
             self.get_current_time(speech = True),
             self.app.ui.display_animation(**UI_BELINSON),
-            self.play_predefined_sound_v2(
-                self.combined_dict[f'VOICE_BELINSON_{self.app.language}']),
+            self.play_sound_with_leds(f'VOICE_BELINSON_{self.app.language}'),
             self.app.ui.display_screen(**UI_ACTIVITIES),
-            self.play_predefined_sound_v2(
-                self.combined_dict[f'VOICE_ACTIVITIES_{self.app.language}']),
+            self.play_sound_with_leds(f'VOICE_ACTIVITIES_{self.app.language}'),
             self.app.ui.display_screen(**UI_SESSION_SCREEN),
             # self.play_predefined_sound_v2(
             #     self.combined_dict[f'VOICE_EXPLAIN_SESSION_{self.app.language}'])
@@ -2182,10 +2174,10 @@ class Helpers:
 
         # Download dynamic voices while navigating to the patient (only on
         # first navigation)
-        if self.app.one_time_action_flag:
-            self.app.one_time_action_flag = False
-            await self.get_buffers_dict(dynamic = True)   
-            self.temp_get_audio()
+        # if self.app.one_time_action_flag:
+        #     self.app.one_time_action_flag = False
+        #     await self.get_buffers_dict(dynamic = True)   
+        #     self.temp_get_audio()
             
         # Print the current actions
         if self.app.nav_feedback != error_msg:

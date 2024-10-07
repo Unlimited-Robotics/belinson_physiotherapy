@@ -195,13 +195,14 @@ class Actions(BaseActions):
         try:
             # Pre video interactions
             await self.helpers.play_sound_with_leds(
-                    f'VOICE_PREVIDEO_1_{self.app.language}')
+                f'VOICE_PREVIDEO_1_{self.app.language}')
             
             await self.helpers.play_sound_with_leds(
-                    f'VOICE_PREVIDEO_2_{self.app.language}')
+                f'VOICE_PREVIDEO_2_{self.app.language}')
             
             await self.helpers.play_sound_with_leds(
                 f'VOICE_MIMIC_VIDEO_{self.app.language}')
+               
 
             # Start treatment
             # await self.helpers.wait_for_button(screen = UI_BEGIN,
@@ -210,11 +211,12 @@ class Actions(BaseActions):
 
             # # Move backwards
             # try:
-            #     await self.helpers.play_sound_with_leds(
-            #         f'VOICE_MOVING_BACKWARDS_{self.app.language}')
-               
-            #     await self.app.motion.move_linear(distance = 0.2,
-            #                                     x_velocity = -0.1,
+            #     await self.helpers.play_predefined_sound_v2(
+            #     self.helpers.combined_dict[
+            #         f'VOICE_MOVING_BACKWARDS_{self.app.language}']
+            #         )
+            #     await self.app.motion.move_linear(distance = 0.25,
+            #                                     x_velocity = -0.125,
             #                                     wait = True
             #                                     )
             # except Exception as e:
@@ -224,58 +226,57 @@ class Actions(BaseActions):
             video_params = UI_OPEN_VIDEO
             video_params['async_callback'] = self.helpers.async_cb_video_links
             for i in range(len(self.app.videos_dict)):
-                if self.app.videos_dict[f'video{i+1}']['link'] != 'no_value':
-
-                    # Specific video instructions - shoulder fracture
+                if self.app.videos_dict[f'video{i+1}']['name'] != 'no_value':
+                    
                     try:
-                        if VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['link']] \
-                            == 'shoulder_fracture':
+                        # Specific video instructions - shoulder fracture
+                        if self.app.videos_dict[f'video{i+1}']['name'] == 'shoulder_fracture':
                             await self.app.ui.display_screen(**UI_SHOULDER_FRACTURE)
                             await self.helpers.play_sound_with_leds(
-                                f'VOICE_SHOULDER_FRACTURE_{self.app.language}')
+                                 f'VOICE_SHOULDER_FRACTURE_{self.app.language}')
+                            
+                    
                     except Exception as e:
                         pass
-                    
-                    video_params['url'] = \
-                                    self.app.videos_dict[f'video{i+1}']['link']
+
+                    video_params['url'] = VIDEO_DICT[self.app.videos_dict[f'video{i+1}']['name']]
                     
                     for j in range(self.app.videos_dict[f'video{i+1}']['reps']):
-                        self.app.video_feedback = None 
+                        self.app.video_feedback = None
 
                         # Open video, wait until finished
                         await self.app.ui.open_video(**video_params)
                         while not self.app.video_feedback:
                             await self.app.sleep(0.5)
-                        
-                        # Video finished interactions
-                        await self.app.ui.display_screen(**UI_CONGRATS)
 
-                if i < len(self.app.videos_dict)-1:
-                    await self.helpers.play_sound_with_leds(
-                        f'VOICE_NEXT_VIDEO_{self.app.language}')
-                   
-
+                    await self.app.ui.display_screen(**UI_CONGRATS)
+                    if i < self.app.num_videos - 1:
+                        await self.helpers.play_sound_with_leds(
+                            f'VOICE_NEXT_VIDEO_{self.app.language}')
+                           
             # End of treatment
             await self.helpers.play_sound_with_leds(
-                    f'VOICE_END_TREATMENT_{self.app.language}')
-
+                f'VOICE_END_TREATMENT_{self.app.language}')
+               
             # Move forwards
-            try:
-                await self.helpers.play_sound_with_leds(
-                    f'VOICE_MOVING_FORWARDS_{self.app.language}')
-                
-                await self.app.motion.move_linear(distance = 0.15,
-                                                x_velocity = 0.075,
-                                                wait = True
-                                                )
-            except Exception as e:
-                print(e)
+            # try:
+            #     await self.helpers.play_predefined_sound_v2(
+            #         self.helpers.combined_dict[
+            #             f'VOICE_MOVING_FORWARDS_{self.app.language}'
+            #         ]
+            #     )
+            #     await self.app.motion.move_linear(distance = 0.2,
+            #                                     x_velocity = 0.1,
+            #                                     wait = True
+            #                                     )
+            # except Exception as e:
+            #     print(e)
 
             # Get user feedback
-            await self.helpers.get_user_feedback()
+            # await self.helpers.get_user_feedback()
             await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
             await self.helpers.play_sound_with_leds(
-                    f'VOICE_AFTER_FEEDBACK_{self.app.language}')
+                f'VOICE_AFTER_FEEDBACK_{self.app.language}')
             self.app.sessions_successful = True
 
         except Exception as e:
@@ -285,6 +286,7 @@ class Actions(BaseActions):
                                                e,
                                                self.app.brief_attempts,
                                                MAX_BRIEF_ATTEMPTS)
+
 
 
             

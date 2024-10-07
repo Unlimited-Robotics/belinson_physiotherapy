@@ -500,19 +500,24 @@ class RayaApplication(RayaApplicationBase):
         globals().update(UI_language_dict[self.language])
     
         # Create a videos dictionary
-        self.videos_dict = {'video1' : {'link' : self.v1,
+        self.videos_dict = {'video1' : {'name' : self.v1,
                                         'reps' : int(self.r1)
                                         },
-                            'video2' : {'link' : self.v2,
+                            'video2' : {'name' : self.v2,
                                         'reps' : int(self.r2)
                                         },
-                            'video3' : {'link' : self.v3,
+                            'video3' : {'name' : self.v3,
                                         'reps' : int(self.r3)
                                         },
-                            'video4' : {'link' : self.v4,
+                            'video4' : {'name' : self.v4,
                                         'reps' : int(self.r4)
                                         },
-                            'video5' : {'link' : self.v5,
+                            'video5' : {'name' : self.v5,
                                         'reps' : int(self.r5)
                                         },
                             }
+        
+        self.num_videos = 0
+        for item in self.videos_dict:
+            if self.videos_dict[item]['name'] != 'no_value':
+                self.num_videos += 1
