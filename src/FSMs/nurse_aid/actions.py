@@ -370,9 +370,7 @@ class Actions(BaseActions):
         self.helpers.decorate_methods()
         await self.helpers.create_listeners()
         await self.helpers.download_all_voices()
-        await self.helpers.get_buffers_dict(dynamic = True)   
-        self.helpers.temp_get_audio()
-        
+                
         await self.app.sleep(3)
         self.app.log.debug(f'DONE!')
 

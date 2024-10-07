@@ -629,6 +629,19 @@ VOICE_MIMIC_VIDEO_HEBREW = {
     'file_name' : 'VOICE_MIMIC_VIDEO_HEBREW'
 }
 
+VOICE_PHYSIO_TEAM_HEBREW = {
+    'text' : 'צוות הפיזיותרפיה במחלקה הגריאטרית מודה לכם על שיתוף הפעולה ומאחל תרגול מהנה ומועיל.',
+    'language' : 'he-IL',
+    'name' : 'he-IL-Wavenet-D',
+    'file_name' : 'VOICE_PHYSIO_TEAM_HEBREW'
+}
+
+VOICE_END_VIDEOS_HEBREW = {
+    'text' : 'כל הכבוד על המאמץ וההתמדה ותודה רבה על שיתוף הפעולה. נתראה בתרגול הבא!',
+    'language' : 'he-IL',
+    'name' : 'he-IL-Wavenet-D',
+    'file_name' : 'VOICE_END_VIDEOS_HEBREW'
+}
 
 AUDIO_HEBREW = {
     'VOICE_ABORTED_BY_PATIENT_HEBREW': VOICE_ABORTED_BY_PATIENT_HEBREW,
@@ -720,6 +733,8 @@ AUDIO_HEBREW = {
     'VOICE_PREVIDEO_2_HEBREW' : VOICE_PREVIDEO_2_HEBREW,
     'VOICE_NEXT_VIDEO_HEBREW' : VOICE_NEXT_VIDEO_HEBREW,
     'VOICE_SHOULDER_FRACTURE_HEBREW' : VOICE_SHOULDER_FRACTURE_HEBREW,
-    'VOICE_MIMIC_VIDEO_HEBREW' : VOICE_MIMIC_VIDEO_HEBREW
+    'VOICE_MIMIC_VIDEO_HEBREW' : VOICE_MIMIC_VIDEO_HEBREW,
+    'VOICE_PHYSIO_TEAM_HEBREW' : VOICE_PHYSIO_TEAM_HEBREW,
+    'VOICE_END_VIDEOS_HEBREW' : VOICE_END_VIDEOS_HEBREW
 }
 
