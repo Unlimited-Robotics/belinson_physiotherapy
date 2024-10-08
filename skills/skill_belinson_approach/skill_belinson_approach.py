@@ -2,6 +2,7 @@
 from raya.skills import RayaSkillHandler, RayaFSMSkill
 from raya.controllers import *
 from raya.controllers.navigation_controller import POSITION_UNIT, ANGLE_UNIT
+from raya.exceptions import *
 
 # Filesystem Imports
 from .constants import *
@@ -31,6 +32,7 @@ class SkillBelinsonApproach(RayaFSMSkill):
         'DETECT_FEET',
         'APPROACH_FEET_CV',
         'APPROACH_FEET_LIDAR',
+        'IDLE',
         'END',
     ]
 
@@ -73,6 +75,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
     # =============================== Actions =============================== #
     async def enter_DETECT_FACE(self):
+        self.last_state = 'DETECT_FACE'
+
         # Initiate detector and give it 3 seconds to detect faces
         self.face_detector.set_img_detections_callback(
             callback = self.callback_all_faces,
@@ -85,6 +89,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
 
     async def enter_SCAN_FOR_DETECTIONS(self):
+        self.last_state = 'SCAN_FOR_DETECTIONS'
+
         # Take predefined rotation params
         rotation_params = SCAN_FOR_FACES_ROTATION_PARAMS.copy()
 
@@ -98,6 +104,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
 
     async def enter_APPROACH_FACE(self):
+        self.last_state = 'APPROACH_FACE'
+
          # Calculate navigation point to face
         current_detection = self.face_detections[0]
         face_position = current_detection['center_point_map']
@@ -134,16 +142,17 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
             # Navigate towards the patient
             try:
-                await self.nav.navigate_to_position(
-                                    x = projected_point.x,
-                                    y = projected_point.y,
-                                    angle = self.execute_args['face_angle'],
-                                    pos_unit = POSITION_UNIT.METERS,
-                                    ang_unit = ANGLE_UNIT.DEGREES,
-                                    wait = True,
-                                    callback_feedback = self.cb_nav_feedback,
-                                    callback_finish = self.cb_nav_finish
-                                    )
+                await self.navigation_sequence(
+                    x = projected_point.x,
+                    y = projected_point.y,
+                    angle = self.execute_args['face_angle'],
+                    pos_unit = POSITION_UNIT.METERS,
+                    ang_unit = ANGLE_UNIT.DEGREES,
+                    wait = True,
+                    callback_feedback = self.cb_nav_feedback,
+                    callback_finish = self.cb_nav_finish,
+                    close_to_position = self.close_to_position
+                )
                 self.face_approach_success = True
 
             except Exception as e:
@@ -152,6 +161,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
             self.face_approach_success = False
 
     async def enter_DETECT_FEET(self):
+        self.last_state = 'DETECT_FEET'
+
         # Create a queue
         self.feet_queue = deque(maxlen=5)
 
@@ -166,7 +177,9 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
 
     async def enter_APPROACH_FEET_CV(self):
-          # Move forwards as long as you detect feet
+        self.last_state = 'APPROACH_FEET_CV'
+
+        # Move forwards as long as you detect feet
         while self.feet_detected:
             try:
                 await self.motion.set_velocity(
@@ -227,6 +240,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
 
 
     async def enter_APPROACH_FEET_LIDAR(self):
+        self.last_state = 'APPROACH_FEET_LIDAR'
+
         # Set obstacle detection to false
         self.obstacle_detected = False
 
@@ -256,6 +271,10 @@ class SkillBelinsonApproach(RayaFSMSkill):
             except Exception as e:
                 self.log.warn(f'linear movement failed, error: {e}')
                 await self.sleep(0.1)
+
+    
+    async def enter_IDLE(self):
+        self.log.warn(f'Reverting to laste state: {self.last_state}')
 
     # ============================= Transitions ============================= #
     async def transition_from_DETECT_FACE(self):
@@ -303,6 +322,11 @@ class SkillBelinsonApproach(RayaFSMSkill):
                         {'skill_success' : None,
                         'status_msg' : MSGS_DICT['APPROACH_FACE']['success']})
             self.set_state('DETECT_FEET')
+        
+        elif self.face_detection_attempts < MAX_APPROACH_ATTEMPTS:
+            self.close_to_position = True
+            self.set_state('IDLE')
+
         else:
             await self.send_feedback(
                             {'skill_success' : False,
@@ -349,6 +373,11 @@ class SkillBelinsonApproach(RayaFSMSkill):
         await self.cv.disable_all_models()
         self.set_state('END')
 
+
+    async def transition_from_IDLE(self):
+        self.set_state(str(self.last_state))
+
+
     # =============================== Helpers =============================== #
 
     async def enable_skill_controllers(self):
@@ -377,6 +406,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
         self.feet_detection_attempts = 0
         self.feet_detected = False
         self.feet_bad_detection = False
+        self.close_to_position = False
+        self.last_state = None
 
 
     async def get_lidar_data(self, lower_angle, upper_angle):
@@ -516,6 +547,78 @@ class SkillBelinsonApproach(RayaFSMSkill):
         weighted_average = np.sum(queue * normalized_weights)
         
         return weighted_average
+    
+
+    async def navigation_sequence(self,
+                            x,
+                            y,
+                            angle,
+                            pos_unit,
+                            ang_unit,
+                            wait,
+                            callback_feedback,
+                            callback_finish,
+                            close_to_position = False,
+                            max_radius = 0.8
+                            ):
+        
+        if not close_to_position:
+            await self.nav.navigate_to_position(
+                x = x,
+                y = y,
+                angle = angle,
+                pos_unit = pos_unit,
+                ang_unit = ang_unit,
+                wait = wait,
+                callback_feedback = callback_feedback,
+                callback_finish = callback_finish
+            )
+        
+        else:
+
+            self.app.log.debug('/'*50)
+            self.app.log.debug(f'Requested position: {x}, {y}, {angle}')
+
+            path_available = False
+            dx = 1 if pos_unit == POSITION_UNIT.PIXELS else 0.05
+            dy = 1 if pos_unit == POSITION_UNIT.PIXELS else 0.05
+            sign = 1
+
+            for xi in range(5):
+                for yi in range(5):
+
+                    if path_available:
+                        break
+
+                    new_x = x + xi*sign*dx
+                    new_y = x+ yi*sign*dy
+                    
+                    path_available = await self.check_path_available(
+                                        x = new_x,
+                                        y = new_y,
+                                        angle = angle,
+                                        pos_unit = pos_unit,
+                                        ang_unit = ang_unit,
+                                        callback_feedback = callback_feedback,
+                                        callback_finish = callback_finish
+                                        )
+                    sign *= -1
+
+            if path_available:
+                await self.nav.navigate_to_position(
+                x = new_x,
+                y = new_y,
+                angle = angle,
+                pos_unit = pos_unit,
+                ang_unit = ang_unit,
+                wait = wait,
+                callback_feedback = callback_feedback,
+                callback_finish = callback_finish
+            )
+                
+            else:
+                raise RayaNoPathToGoal
+        
     # =============================== Callbacks =============================== #
 
     def callback_all_faces(self, detections, image):
