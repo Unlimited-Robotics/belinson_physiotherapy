@@ -202,6 +202,9 @@ class Actions(BaseActions):
             
             await self.helpers.play_sound_with_leds(
                 f'VOICE_MIMIC_VIDEO_{self.app.language}')
+            
+            await self.helpers.play_sound_with_leds(
+                f'VOICE_PHYSIO_TEAM_{self.app.language}')
                
 
             # Start treatment
@@ -257,6 +260,9 @@ class Actions(BaseActions):
             # End of treatment
             await self.helpers.play_sound_with_leds(
                 f'VOICE_END_TREATMENT_{self.app.language}')
+            
+            await self.helpers.play_sound_with_leds(
+                f'VOICE_END_VIDEOS_{self.app.language}')
                
             # Move forwards
             # try:

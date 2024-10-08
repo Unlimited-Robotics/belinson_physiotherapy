@@ -564,16 +564,9 @@ class Helpers:
         
         try:
             path = f'{AUDIO_PATH}/{recording_name}.mp3'
-
-            print(f'path is: {path}')
-            print(f'resolved path is: {resolve_path(path)}')
-
             rec_time = eyed3.load(resolve_path(path)).info.time_secs
 
-            print(f'rec time is: {rec_time}')
-
-            # rec_time = REC_TIMES[f'{recording_name}.mp3']
-            leds_repetitions = int(0.3*rec_time)
+            leds_repetitions = int(0.3*rec_time)+1
         except Exception as e:
             pass
 
