@@ -249,7 +249,6 @@ UI_STRAIGHT_HEAD = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://blog.kakaocdn.net/dn/OA1Rg/btqGd1TrMh6/ushfpBvqnRU4rCk92HKIXk/img.png',
     'content' : '/assets/UI_STRAIGHT_HEAD.png',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -261,7 +260,6 @@ UI_NO_TIME_FOR_CAUTION = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://www.seekpng.com/png/detail/779-7794349_stop-bot-cartoon-stop-sign-with-transparent-background.png',
     'content' : '/assets/UI_NO_TIME_FOR_CAUTION.jpeg',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -273,7 +271,6 @@ UI_SESSION_EMPHASES = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://www.rotary-ribi.org/upimages/PageMainPics/EARS.jpg',
     'content' : '/assets/UI_SIT_STRAIGHT.jpg',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -285,7 +282,6 @@ UI_TAKE_STICK = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://media0.giphy.com/media/MZXmFVrbMA1qSDNGOt/giphy.gif?cid=ecf05e47k0o5qi0r21x53t5kgtvfjsab7qx8q88pikd9lbb1&rid=giphy.gif&ct=s',
     'content' : '/assets/UI_TAKE_STICK.gif',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -297,7 +293,6 @@ UI_RETURN_STICK = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://media0.giphy.com/media/MZXmFVrbMA1qSDNGOt/giphy.gif?cid=ecf05e47k0o5qi0r21x53t5kgtvfjsab7qx8q88pikd9lbb1&rid=giphy.gif&ct=s',
     'content' : '/assets/UI_TAKE_STICK.gif',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -309,7 +304,6 @@ UI_GUIDELINES = {
     'title_size' : UI_TITLE_SIZE.LARGE,
     'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
-    # 'content' : 'https://www.rotary-ribi.org/upimages/PageMainPics/EARS.jpg',
     'content' : '/assets/UI_GUIDELINES.jpg',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : CUSTOM_STYLE
@@ -320,10 +314,8 @@ UI_GUIDELINES = {
 UI_STOP_CONDITION = {
     'title' : '!כפתור חירום',
     'title_size' : UI_TITLE_SIZE.MEDIUM,
-    # 'format' : UI_ANIMATION_TYPE.URL,
     'back_button_text' : '',
     'show_loader' : False,
-    # 'content' : '/assets/UI_STOP_CONDITION.gif',
     'theme' : UI_THEME_TYPE.WHITE,
     'custom_style' : {'title' : {'font-size' : '130px'},
                         'subtitle' : {'font-size' : '60px'},
@@ -343,7 +335,6 @@ UI_ARRIVING = {
         'format': UI_ANIMATION_TYPE.URL,
         'subtitle' : 'אנא לשבת זקוף',
         'back_button_text' : '',
-        # 'content' : 'https://cms-assets.tutsplus.com/cdn-cgi/image/width=360/uploads/users/1112/posts/25730/final_image/animate-run-progress-04.gif',
         'content' : '/assets/UI_ARRIVING.gif',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
@@ -356,7 +347,6 @@ UI_INTRODUCTION = {
         'title_size' : UI_TITLE_SIZE.MEDIUM,
         'format': UI_ANIMATION_TYPE.URL,
         'back_button_text' : '',
-        # 'content' : 'https://i.postimg.cc/DwSCXBNx/f415e2-7d7e99622ef14504b66e6d560b34c34ef000.webp',
         'content' : '/assets/gary_the_robot.png',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
@@ -395,7 +385,6 @@ UI_BELINSON = {
         'title_size' : UI_TITLE_SIZE.LARGE,
         'format': UI_ANIMATION_TYPE.URL,
         'back_button_text' : '',
-        # 'content' : 'https://www.israelhayom.co.il/wp-content/uploads/2022/07/07/07/OM5_9542-600x400.jpg',
         'content' : '/assets/UI_BELINSON.jpg',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
@@ -415,36 +404,12 @@ UI_GERIATRIC = {
         'title_size' : UI_TITLE_SIZE.LARGE,
         'format': UI_ANIMATION_TYPE.URL,
         'back_button_text' : '',
-        # 'content' : 'https://media.giphy.com/media/zOU33C79GYLcyg6dWI/giphy.gif',
         'content' : '/assets/UI_GERIATRIC.gif',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
         'custom_style' : CUSTOM_STYLE
     }
 
-
-# UI_ACTIVITIES = {
-#         'title' : 'נעשה היום ביחד פעילויות',
-#         #'subtitle' : 'המרפאה לריפוי בעיסוק',
-#         'title_size' : UI_TITLE_SIZE.MEDIUM,
-#         'format': UI_ANIMATION_TYPE.URL,
-#         'back_button_text' : '',
-#         # 'content' : 'https://media.giphy.com/media/JTbtvgjLN4w9jXmsS4/giphy.gif',
-#         # 'content' : '/assets/UI_ACTIVITIES.gif',
-#         'content' : '',
-#         'show_loader' : False,
-#         'theme' : UI_THEME_TYPE.WHITE,
-#         'custom_style' : {'title' : {'font-size' : '130px'},
-#                         'subtitle' : {'font-size' : '60px'},
-#                         'background' : {'background' : background_url,
-#                                         'backgroundRepeat' : 'no-repeat',
-#                                         'backgroundSize' : 'cover'},
-
-#                         'image' : {'width' : '300px',
-#                                     'height' : '500px'}
-                        
-#                         }
-#     }
 
 UI_ACTIVITIES = {
         'title' : 'נעשה ביחד מספר פעילויות',
@@ -471,7 +436,6 @@ UI_APPROACHING= {
         'title_size' : UI_TITLE_SIZE.LARGE,
         'format': UI_ANIMATION_TYPE.URL,
         'back_button_text' : '',
-        # 'content' : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQUzamS1hiJugJpXan0pKd1UAi3E-vmFnhQQ&usqp=CAU',
         'content' : '/assets/UI_APPROACHING.png',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
@@ -502,13 +466,11 @@ UI_SELECT_WAND_OR_FINGER = {
                 'id': TOUCH_ITEM['Wand'],
                 'name': 'מקל',
                 'imgSrc' : '/assets/UI_STICK.png'
-                # 'imgSrc':"https://slack-imgs.com/?c=1&o1=ro&url=https%3A%2F%2Fi.postimg.cc%2FZY1GGrH7%2Fimage-134.png"
                     
             }, {
                 'id': TOUCH_ITEM['Hand'],
                 'name': 'אצבע',
                 'imgSrc' : '/assets/UI_HAND.jpeg'
-                # 'imgSrc':"https://slack-imgs.com/?c=1&o1=ro&url=https%3A%2F%2Fmedia.istockphoto.com%2Fid%2F158222770%2Fphoto%2Ftouch-controlled-white-virtual-screen.jpg%3Fs%3D612x612%26w%3D0%26k%3D20%26c%3DDqO5KDPGUoddvcQdSGIQdIMLhFuD-cjyy-oFl4K6cvM%3D"
             }]
         ,
                 'theme' : UI_THEME_TYPE.WHITE,
@@ -590,7 +552,6 @@ UI_CHEST_BUTTON_INTRODUCTION = {
         'format': UI_ANIMATION_TYPE.URL,
         'subtitle' : '',
         'back_button_text' : '',
-        # 'content' : "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWZoczVxZGI4ZzFvbnJpZ3Q1emhoNm1qd2UyOXhwZDBqbG9sMno1ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1z/9PekRRQ0WlrRVwynAk/200w.gif",
         'content' : '/assets/UI_STOP_CONDITION.gif',
         'show_loader' : False,
         'theme' : UI_THEME_TYPE.WHITE,
@@ -662,14 +623,12 @@ UI_USER_VERIFY_2 ={
                 'id': USER_VERIFY['True'],
                 'name': 'כן',
                 'imgSrc' : '/assets/UI_TRUE.png'
-                # 'imgSrc': true_img
                     
             }, 
                 {
                 'id': USER_VERIFY['False'],
                 'name': 'לא',
                 'imgSrc' : '/assets/UI_FALSE.jpeg'
-                # 'imgSrc': false_img
             }]
         ,
                 'theme' : UI_THEME_TYPE.WHITE,
@@ -697,6 +656,7 @@ UI_USER_VERIFY_1 = {
     'custom_style' : CUSTOM_STYLE
     }
 
+
 UI_REQUEST_FLEET_HELP = {
     'title' : 'מחכה לאופרטור שיפנה לי את הדרך',
     'submit_text' : 'המשך במשימה',
@@ -704,8 +664,33 @@ UI_REQUEST_FLEET_HELP = {
     'wait' : True
 }
 
-# Videos
-UI_VIDEO_1 = {}
+UI_PHYSIO_TEAM = {
+    'title' : 'צוות הפיזיותרפיה במחלקה הגריאטרית מודה לכם על שיתוף הפעולה ומאחל תרגול מהנה ומועיל.',
+    'subtitle' : '',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE
+}
+
+UI_VIDEOS_END = {
+    'title' : 'כל הכבוד על המאמץ וההתמדה ותודה רבה על שיתוף הפעולה. נתראה בתרגול הבא!',
+    'subtitle' : '',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE
+}
+
+UI_MIMIC_VIDEO = {
+    'title' : 'אנא השתדלו לבצע את התנועה כפי שמוצגת בסרטון ההדגמה.',
+    'subtitle' : '',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE
+}
+
 
 SCREENS_HEBREW = {'UI_NAVIGATING_TO_HOME' : UI_NAVIGATING_TO_HOME,
                     'UI_SCREEN_END' : UI_SCREEN_END,
@@ -746,5 +731,8 @@ SCREENS_HEBREW = {'UI_NAVIGATING_TO_HOME' : UI_NAVIGATING_TO_HOME,
                     'UI_FEEDBACK_END_TREATMENT' : UI_FEEDBACK_END_TREATMENT,
                     'UI_USER_VERIFY_2' : UI_USER_VERIFY_2,
                     'UI_USER_VERIFY_1' : UI_USER_VERIFY_1,
-                    'UI_REQUEST_FLEET_HELP' : UI_REQUEST_FLEET_HELP
+                    'UI_REQUEST_FLEET_HELP' : UI_REQUEST_FLEET_HELP,
+                    'UI_PHYSIO_TEAM' : UI_PHYSIO_TEAM,
+                    'UI_VIDEOS_END' : UI_VIDEOS_END,
+                    'UI_MIMIC_VIDEO' : UI_MIMIC_VIDEO
                 }

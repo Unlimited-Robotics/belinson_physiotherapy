@@ -207,24 +207,6 @@ class Actions(BaseActions):
                 f'VOICE_PHYSIO_TEAM_{self.app.language}')
                
 
-            # Start treatment
-            # await self.helpers.wait_for_button(screen = UI_BEGIN,
-            #                                     button_type = 'start'
-            #                                     )
-
-            # # Move backwards
-            # try:
-            #     await self.helpers.play_predefined_sound_v2(
-            #     self.helpers.combined_dict[
-            #         f'VOICE_MOVING_BACKWARDS_{self.app.language}']
-            #         )
-            #     await self.app.motion.move_linear(distance = 0.25,
-            #                                     x_velocity = -0.125,
-            #                                     wait = True
-            #                                     )
-            # except Exception as e:
-            #     print(e)
-
             # Start opening videos one by one
             video_params = UI_OPEN_VIDEO
             video_params['async_callback'] = self.helpers.async_cb_video_links
@@ -259,30 +241,12 @@ class Actions(BaseActions):
                            
             # End of treatment
             await self.helpers.play_sound_with_leds(
-                f'VOICE_END_TREATMENT_{self.app.language}')
-            
-            await self.helpers.play_sound_with_leds(
-                f'VOICE_END_VIDEOS_{self.app.language}')
-               
-            # Move forwards
-            # try:
-            #     await self.helpers.play_predefined_sound_v2(
-            #         self.helpers.combined_dict[
-            #             f'VOICE_MOVING_FORWARDS_{self.app.language}'
-            #         ]
-            #     )
-            #     await self.app.motion.move_linear(distance = 0.2,
-            #                                     x_velocity = 0.1,
-            #                                     wait = True
-            #                                     )
-            # except Exception as e:
-            #     print(e)
-
-            # Get user feedback
-            # await self.helpers.get_user_feedback()
+                f'VOICE_END_VIDEOS_{self.app.language}'
+                )
             await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
             await self.helpers.play_sound_with_leds(
-                f'VOICE_AFTER_FEEDBACK_{self.app.language}')
+                f'VOICE_AFTER_FEEDBACK_{self.app.language}'
+                )
             self.app.sessions_successful = True
 
         except Exception as e:
