@@ -4,7 +4,7 @@ STATES = [
     'SETUP',
     'NAVIGATING_TO_ROOM',
     'APPROACHING_PERSON',
-    'APPROACHING_FEET', 
+    # 'APPROACHING_FEET', 
     'USER_SETUP', 
     'BRIEF',
     'SESSIONS', 
