@@ -273,13 +273,13 @@ VOICE_VERIFY_PATIENT_ENGLISH = {
     "dynamic": True
 }
 
-VOICE_EXPLAIN_SESSION_ENGLISH = {
-    "text": f"The length of today's treatment is dummy_treatment_time minutes.",
-    "language": "en-GB",
-    "name": "en-GB-Wavenet-D",
-    "file_name": "VOICE_EXPLAIN_SESSION_ENGLISH",
-    "dynamic": True
-}
+# VOICE_EXPLAIN_SESSION_ENGLISH = {
+#     "text": f"The length of today's treatment is dummy_treatment_time minutes.",
+#     "language": "en-GB",
+#     "name": "en-GB-Wavenet-D",
+#     "file_name": "VOICE_EXPLAIN_SESSION_ENGLISH",
+#     "dynamic": True
+# }
 
 VOICE_CARD_MATCH_1_ENGLISH = {
     "text": f"Well done dummy_patient_name",
@@ -413,7 +413,7 @@ AUDIO_ENGLISH = {
     'VOICE_DIFFERENCE_GAME_ENGLISH': VOICE_DIFFERENCE_GAME_ENGLISH,
     'VOICE_END_TREATMENT_ENGLISH': VOICE_END_TREATMENT_ENGLISH,
     'VOICE_EXPLAIN_FINGER_OR_WAND_ENGLISH': VOICE_EXPLAIN_FINGER_OR_WAND_ENGLISH,
-    'VOICE_EXPLAIN_SESSION_ENGLISH': VOICE_EXPLAIN_SESSION_ENGLISH,
+    # 'VOICE_EXPLAIN_SESSION_ENGLISH': VOICE_EXPLAIN_SESSION_ENGLISH,
     # 'VOICE_FEEDBACK_BAD_ENGLISH': VOICE_FEEDBACK_BAD_ENGLISH,
     'VOICE_FEEDBACK_GOOD_ENGLISH': VOICE_FEEDBACK_GOOD_ENGLISH,
     'VOICE_FEEDBACK_ENGLISH': VOICE_FEEDBACK_ENGLISH,

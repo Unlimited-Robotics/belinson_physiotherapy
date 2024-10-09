@@ -108,38 +108,38 @@ class Transitions(BaseTransitions):
 
     
 
-    async def APPROACHING_FEET(self):
-        if self.app.dev_mode_flag:
-            self.set_state('IDLE')
+    # async def APPROACHING_FEET(self):
+    #     if self.app.dev_mode_flag:
+    #         self.set_state('IDLE')
 
-        if self.app.stop_condition:
-            self.set_state('TREATMENT_PAUSE')
+    #     if self.app.stop_condition:
+    #         self.set_state('TREATMENT_PAUSE')
 
-        # If the approach was successful, Gary introduces themselves
-        elif self.app.feet_approach_successful:
-            # Disable models
-            try:
-                await self.app.cv.disable_model(self.app.feet_detector)
-                await self.app.cv.disable_model(self.app.face_detector)
-            except Exception as e:
-                self.app.log.debug(f"Couldn't disable model - {e}")
+    #     # If the approach was successful, Gary introduces themselves
+    #     elif self.app.feet_approach_successful:
+    #         # Disable models
+    #         try:
+    #             await self.app.cv.disable_model(self.app.feet_detector)
+    #             await self.app.cv.disable_model(self.app.face_detector)
+    #         except Exception as e:
+    #             self.app.log.debug(f"Couldn't disable model - {e}")
 
-            # Reset variables
-            self.helpers.reset_variables()
-            self.set_state('USER_SETUP')
+    #         # Reset variables
+    #         self.helpers.reset_variables()
+    #         self.set_state('USER_SETUP')
         
-        # If the approach wasn't successful and max attempts was reached, abort
-        elif self.app.approach_attempts > MAX_APPROACH_ATTEMPTS:
-            await self.helpers.play_sound_with_leds(
-                    f'VOICE_COULDNT_REACH_TARGET_{self.app.language}')
-            self.set_state('NAVIGATING_HOME')
+    #     # If the approach wasn't successful and max attempts was reached, abort
+    #     elif self.app.approach_attempts > MAX_APPROACH_ATTEMPTS:
+    #         await self.helpers.play_sound_with_leds(
+    #                 f'VOICE_COULDNT_REACH_TARGET_{self.app.language}')
+    #         self.set_state('NAVIGATING_HOME')
 
-        # If the approach wasn't successful and max attempts wasnt reached,
-        # try again
-        else:
-            await self.helpers.play_sound_with_leds(
-                    f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
-            self.set_state('')
+    #     # If the approach wasn't successful and max attempts wasnt reached,
+    #     # try again
+    #     else:
+    #         await self.helpers.play_sound_with_leds(
+    #                 f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
+    #         self.set_state('')
 
 
 
@@ -221,8 +221,8 @@ class Transitions(BaseTransitions):
         elif self.app.navigation_successful:
             self.helpers.reset_variables()
             end_time = time.time()
-            self.app.end_to_end_time = end_time - self.app.end_to_end_timer
-            self.app.end_to_end_success = True
+            # self.app.end_to_end_time = end_time - self.app.end_to_end_timer
+            # self.app.end_to_end_success = True
             self.set_state('END')
         
         # If the navigation wasn't succesful and max attempts was reached, abort

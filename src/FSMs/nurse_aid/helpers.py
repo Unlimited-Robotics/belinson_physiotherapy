@@ -86,7 +86,7 @@ class Helpers:
         if 'approach' not in exclude_groups:
             self.app.approach_successful = False
             self.app.approach_attempts = 0
-            self.app.feet_detected = False
+            # self.app.feet_detected = False
         
         self.app.stop_condition = False
         self.app.stop_fleet = False
@@ -100,17 +100,17 @@ class Helpers:
         self.app.ui_button_feedback_id = None
 
 
-    async def acquire_session_time(self):
-        '''Get the session time to speak it later'''
-        if int(self.app.treatment_time) != 0:
-            if self.app.language == 'HEBREW':
-                self.app.cognishine_sentence = \
-                                f'{self.app.treatment_time} דקות של תרגול קוגנטיבי'
-            elif self.app.language == 'ENGLISH':
-                self.app.cognishine_sentence = \
-                    f'{self.app.treatment_time} minutes of cognitive exercises'
-        else:
-            self.app.cognishine_sentence = ''
+    # async def acquire_session_time(self):
+    #     '''Get the session time to speak it later'''
+    #     if int(self.app.treatment_time) != 0:
+    #         if self.app.language == 'HEBREW':
+    #             self.app.cognishine_sentence = \
+    #                             f'{self.app.treatment_time} דקות של תרגול קוגנטיבי'
+    #         elif self.app.language == 'ENGLISH':
+    #             self.app.cognishine_sentence = \
+    #                 f'{self.app.treatment_time} minutes of cognitive exercises'
+    #     else:
+    #         self.app.cognishine_sentence = ''
 
 
 
@@ -366,7 +366,7 @@ class Helpers:
         # If the voice isn't downloaded already, or dynamic flag is up,
         #  download it
         if not check_file_exists(path) or dynamic is True:
-            self.app.dynamic_recordings_list.append(path.strip(f'/{AUDIO_PATH}'))
+            # self.app.dynamic_recordings_list.append(path.strip(f'/{AUDIO_PATH}'))
             self.app.log.info(f'Downloading audio: \'{path}\'')
             synthesized_input = texttospeech.SynthesisInput(text=text)
             voice = texttospeech.VoiceSelectionParams(
@@ -404,154 +404,154 @@ class Helpers:
     
 
 
-    def strip_prefix_suffix_from_keys(self, orig_dict: dict, prefix: str):
-        '''Strip a chosen prefix from keys of a dictionary'''
-        prefix_len = len(prefix)
-        new_dict = {}
-        for key, value in orig_dict.items():
-            if key.startswith(prefix):
-                key = key[prefix_len:]
-            if key.endswith(prefix):
-                key = key[:-prefix_len]
-            new_dict[key] = value
-        return new_dict
+    # def strip_prefix_suffix_from_keys(self, orig_dict: dict, prefix: str):
+    #     '''Strip a chosen prefix from keys of a dictionary'''
+    #     prefix_len = len(prefix)
+    #     new_dict = {}
+    #     for key, value in orig_dict.items():
+    #         if key.startswith(prefix):
+    #             key = key[prefix_len:]
+    #         if key.endswith(prefix):
+    #             key = key[:-prefix_len]
+    #         new_dict[key] = value
+    #     return new_dict
     
 
 
-    def combine_dicts(self, dict_ids: dict, dict_timestamps: dict):
-        '''
-        Combine two dictionaries with the same keys to a new dictionary where
-        each value is a dict containing the values of the original dict
-        '''
-        combined_dict = {}
-        for name in dict_ids:
-            combined_dict[name] = {
-                'buffer_id': dict_ids[name],
-                'timestamp': dict_timestamps[name]
-            }
+    # def combine_dicts(self, dict_ids: dict, dict_timestamps: dict):
+    #     '''
+    #     Combine two dictionaries with the same keys to a new dictionary where
+    #     each value is a dict containing the values of the original dict
+    #     '''
+    #     combined_dict = {}
+    #     for name in dict_ids:
+    #         combined_dict[name] = {
+    #             'buffer_id': dict_ids[name],
+    #             'timestamp': dict_timestamps[name]
+    #         }
 
-        return combined_dict
+    #     return combined_dict
 
     
 
-    async def play_predefined_sound_v2(self,
-                                       recording_name: str,
-                                       leds: bool = True,
-                                       wait: bool = True
-                                       ):
-        """"
-        Play predefined sound with the sound controller patch
-        INPUTS:
-                recording_name - name of the audio file to play
-                leds - whether to turn on the leds whilst playing the audio
-                wait - whether to wait for the audio to finish or not
+    # async def play_predefined_sound_v2(self,
+    #                                    recording_name: str,
+    #                                    leds: bool = True,
+    #                                    wait: bool = True
+    #                                    ):
+    #     """"
+    #     Play predefined sound with the sound controller patch
+    #     INPUTS:
+    #             recording_name - name of the audio file to play
+    #             leds - whether to turn on the leds whilst playing the audio
+    #             wait - whether to wait for the audio to finish or not
 
-        OUTPUTS:
-                This function doesn't return any outputs, it plays a recording
-        """
+    #     OUTPUTS:
+    #             This function doesn't return any outputs, it plays a recording
+    #     """
 
-        buffer_id = recording_name['buffer_id']
-        rec_time = recording_name['timestamp']
+    #     buffer_id = recording_name['buffer_id']
+    #     rec_time = recording_name['timestamp']
 
-        leds_data = {'group' : 'head',
-                        'color' : 'blue',
-                        'animation' : 'MOTION_4',
-                        'speed' : 7,
-                        'repetitions' : int(0.3*rec_time)+1,
-                        'wait' : False
-                        }
-        try:
-            await self.app.sound.cancel_all_sounds()
-            await self.app.leds.turn_off_group(group = 'head')
+    #     leds_data = {'group' : 'head',
+    #                     'color' : 'blue',
+    #                     'animation' : 'MOTION_4',
+    #                     'speed' : 7,
+    #                     'repetitions' : int(0.3*rec_time)+1,
+    #                     'wait' : False
+    #                     }
+    #     try:
+    #         await self.app.sound.cancel_all_sounds()
+    #         await self.app.leds.turn_off_group(group = 'head')
         
-        except Exception as e:
-            self.app.log.debug(
-                f"Couldn't cancel sounds and leds \
-                            in play_predefined_sound_v2, got exception - {e}" )
+    #     except Exception as e:
+    #         self.app.log.debug(
+    #             f"Couldn't cancel sounds and leds \
+    #                         in play_predefined_sound_v2, got exception - {e}" )
 
-        try:
-            self.app.sound._playing_buffers_ids.update(BUFFER_IDS)
-            await self.app.sound._play_buffer(
-                                buff_id = buffer_id,
-                                leds = leds,
-                                leds_data = leds_data,
-                                wait = wait
-                                )
+    #     try:
+    #         self.app.sound._playing_buffers_ids.update(BUFFER_IDS)
+    #         await self.app.sound._play_buffer(
+    #                             buff_id = buffer_id,
+    #                             leds = leds,
+    #                             leds_data = leds_data,
+    #                             wait = wait
+    #                             )
 
-        except Exception as e:
-            self.app.log.debug(f"Couldn't play sound {recording_name} \
-                               got exception - {e}")
+    #     except Exception as e:
+    #         self.app.log.debug(f"Couldn't play sound {recording_name} \
+    #                            got exception - {e}")
 
 
 
-    async def get_buffers_dict(self,
-                                leds: bool = False,
-                                wait: bool = True,
-                                save: bool = False,
-                                buffer_id: str = None,
-                                dynamic: bool = True
-                                ):
-        '''
-        Get the dictionary containing the buffer ids with their corresponding
-        recording name. The function plays each sound and assigns it to a buffer
-        INPUTS:
-            leds - whether to play leds (the param is required in the sound
-                    controller patch, its auto set to False in this wrapper)
-            wait - whether to wait when playing the sound
-            save - whether to save the sound
-            buffer_id - buffer to assign (the param is required in the sound
-                        controller patch, its auto set to None in order to
-                        generate a buffer id)
-            dynamic - whether to assign a buffer to a recording or not if it
-                      already exists
+    # async def get_buffers_dict(self,
+    #                             leds: bool = False,
+    #                             wait: bool = True,
+    #                             save: bool = False,
+    #                             buffer_id: str = None,
+    #                             dynamic: bool = True
+    #                             ):
+    #     '''
+    #     Get the dictionary containing the buffer ids with their corresponding
+    #     recording name. The function plays each sound and assigns it to a buffer
+    #     INPUTS:
+    #         leds - whether to play leds (the param is required in the sound
+    #                 controller patch, its auto set to False in this wrapper)
+    #         wait - whether to wait when playing the sound
+    #         save - whether to save the sound
+    #         buffer_id - buffer to assign (the param is required in the sound
+    #                     controller patch, its auto set to None in order to
+    #                     generate a buffer id)
+    #         dynamic - whether to assign a buffer to a recording or not if it
+    #                   already exists
 
-        OUTPUTS:
-            This function has no outputs. It sets a buffer dictionary attribute
-        '''
+    #     OUTPUTS:
+    #         This function has no outputs. It sets a buffer dictionary attribute
+    #     '''
 
-        # Get the list of recordings to process, depending on whether all
-        # voices should be downloaded, or just dynamic ones
-        path = f'{AUDIO_PATH}'
-        i = 1
-        self.rec_times = {}
-        recordings_list = os.listdir(resolve_path(path)) if not dynamic else \
-                                            self.app.dynamic_recordings_list
+    #     # Get the list of recordings to process, depending on whether all
+    #     # voices should be downloaded, or just dynamic ones
+    #     path = f'{AUDIO_PATH}'
+    #     i = 1
+    #     self.rec_times = {}
+    #     recordings_list = os.listdir(resolve_path(path)) if not dynamic else \
+    #                                         self.app.dynamic_recordings_list
         
-        # Play the recording, assign a buffer ID to it
-        for recording in recordings_list:
-            print(
-                f'playing recording: {recording} | [{i}/{len(recordings_list)}]')
-            try:
-                if self.app.sound.is_playing():
-                    await self.app.sound.cancel_all_sounds()
+    #     # Play the recording, assign a buffer ID to it
+    #     for recording in recordings_list:
+    #         print(
+    #             f'playing recording: {recording} | [{i}/{len(recordings_list)}]')
+    #         try:
+    #             if self.app.sound.is_playing():
+    #                 await self.app.sound.cancel_all_sounds()
 
-                start_time = time.time()
-                await self.app.sound.play_sound(
-                                path=f'{AUDIO_PATH}/{recording}',
-                                callback_finish = self.cb_finish_sound,
-                                wait = wait,
-                                save = save,
-                                leds = leds,
-                                leds_data = {},
-                                volume = 0,
-                                buffer_id = buffer_id
-                                )
-                end_time = time.time()
-                self.rec_times[recording] = abs(end_time-start_time)
-                print(f'time: {abs(end_time-start_time)}'),
-                print('-'*75)
+    #             start_time = time.time()
+    #             await self.app.sound.play_sound(
+    #                             path=f'{AUDIO_PATH}/{recording}',
+    #                             callback_finish = self.cb_finish_sound,
+    #                             wait = wait,
+    #                             save = save,
+    #                             leds = leds,
+    #                             leds_data = {},
+    #                             volume = 0,
+    #                             buffer_id = buffer_id
+    #                             )
+    #             end_time = time.time()
+    #             self.rec_times[recording] = abs(end_time-start_time)
+    #             print(f'time: {abs(end_time-start_time)}'),
+    #             print('-'*75)
 
-            except Exception as e:
-                self.app.log.debug(f'got exception - {e} in get_buffers_dict')
-            i += 1
+    #         except Exception as e:
+    #             self.app.log.debug(f'got exception - {e} in get_buffers_dict')
+    #         i += 1
         
-        # Print the results
-        self.current_buffer_dict = self.app.sound._get_audio_dict()
-        print('-'*100)
-        print('BUFFER DICT:')
-        print(self.current_buffer_dict)
-        print(f'RECORDING TIMES:')
-        print(self.rec_times)
+    #     # Print the results
+    #     self.current_buffer_dict = self.app.sound._get_audio_dict()
+    #     print('-'*100)
+    #     print('BUFFER DICT:')
+    #     print(self.current_buffer_dict)
+    #     print(f'RECORDING TIMES:')
+    #     print(self.rec_times)
         
 
     async def play_sound_with_leds(self,
@@ -793,128 +793,128 @@ class Helpers:
         
     
 
-    def inverse_angle(self,
-                      angle: int
-                      ):
-        '''Get the inverse of an angle'''
-        inverse = (angle + 180) % 360
-        if inverse < 0:
-            inverse += 360
-        return inverse
+    # def inverse_angle(self,
+    #                   angle: int
+    #                   ):
+    #     '''Get the inverse of an angle'''
+    #     inverse = (angle + 180) % 360
+    #     if inverse < 0:
+    #         inverse += 360
+    #     return inverse
 
 
-    def get_projected_point(self,
-                            detection_pose: Pose,
-                            distance: float
-                            ):
-        '''
-        Get x y coordinates to navigate to in order to be "distance" away
-        from the detection
-        INPUTS
-            detection_pose - pose of the detection in quanternion
-            distance - desired distance between the robot and the detection
+    # def get_projected_point(self,
+    #                         detection_pose: Pose,
+    #                         distance: float
+    #                         ):
+    #     '''
+    #     Get x y coordinates to navigate to in order to be "distance" away
+    #     from the detection
+    #     INPUTS
+    #         detection_pose - pose of the detection in quanternion
+    #         distance - desired distance between the robot and the detection
         
-        OUTPUTS
-            projected_point - an x, y coordinate
-        '''
-        det_x = detection_pose.position.x
-        det_y = detection_pose.position.y
-        quaternion = (
-            detection_pose.orientation.x,
-            detection_pose.orientation.y,
-            detection_pose.orientation.z,
-            detection_pose.orientation.w
-        )
-        euler = tf_transformations.euler_from_quaternion(quaternion)
-        tag_orientation = euler[2]  
+    #     OUTPUTS
+    #         projected_point - an x, y coordinate
+    #     '''
+    #     det_x = detection_pose.position.x
+    #     det_y = detection_pose.position.y
+    #     quaternion = (
+    #         detection_pose.orientation.x,
+    #         detection_pose.orientation.y,
+    #         detection_pose.orientation.z,
+    #         detection_pose.orientation.w
+    #     )
+    #     euler = tf_transformations.euler_from_quaternion(quaternion)
+    #     tag_orientation = euler[2]  
 
-        point_x = det_x + distance * math.cos(tag_orientation)
-        point_y = det_y + distance * math.sin(tag_orientation)
+    #     point_x = det_x + distance * math.cos(tag_orientation)
+    #     point_y = det_y + distance * math.sin(tag_orientation)
 
-        projected_point = PointStamped()
-        projected_point.point = Point(x = point_x, y = point_y, z = 0.0)
+    #     projected_point = PointStamped()
+    #     projected_point.point = Point(x = point_x, y = point_y, z = 0.0)
 
-        return projected_point         
+    #     return projected_point         
 
 
-    async def approach_sequence(self):
-        '''
-        Navigate towards a patient at a predefined distance
-        The function returns a bool indicating whether the approach was
-        successful
-        '''
+    # async def approach_sequence(self):
+    #     '''
+    #     Navigate towards a patient at a predefined distance
+    #     The function returns a bool indicating whether the approach was
+    #     successful
+    #     '''
 
-        # Reset the detections and wait 3 seconds to obtain new ones
-        # Create face detection listener
-        self.app.face_detector.set_img_detections_callback(
-                    callback = self.callback_all_faces,
-                    as_dict = True,
-                    call_without_detections = True,
-                    cameras_controller = self.app.cameras
-                )
-        self.app.face_detections = {}
-        await self.app.sleep(3.0)
+    #     # Reset the detections and wait 3 seconds to obtain new ones
+    #     # Create face detection listener
+    #     self.app.face_detector.set_img_detections_callback(
+    #                 callback = self.callback_all_faces,
+    #                 as_dict = True,
+    #                 call_without_detections = True,
+    #                 cameras_controller = self.app.cameras
+    #             )
+    #     self.app.face_detections = {}
+    #     await self.app.sleep(3.0)
 
-        # Check if path is available
-        if self.app.face_detections: 
-            current_detection = self.app.face_detections[0]
-            face_position = current_detection['center_point_map']
+    #     # Check if path is available
+    #     if self.app.face_detections: 
+    #         current_detection = self.app.face_detections[0]
+    #         face_position = current_detection['center_point_map']
 
-            goal_predict = Pose()
-            goal_predict.position = Point(x = face_position[0],
-                                        y = face_position[1],
-                                        z = face_position[2])
-            target_angle = self.inverse_angle(self.app.angle_initial)
-            quat = tf_transformations.quaternion_from_euler(        
-                                                    0.0,
-                                                    0.0,
-                                                    np.deg2rad(target_angle)
-                                                    )
-            goal_predict.orientation = Quaternion(x=quat[0], y=quat[1],
-                                                    z=quat[2], w=quat[3]
-                                                    )
+    #         goal_predict = Pose()
+    #         goal_predict.position = Point(x = face_position[0],
+    #                                     y = face_position[1],
+    #                                     z = face_position[2])
+    #         target_angle = self.inverse_angle(self.app.angle_initial)
+    #         quat = tf_transformations.quaternion_from_euler(        
+    #                                                 0.0,
+    #                                                 0.0,
+    #                                                 np.deg2rad(target_angle)
+    #                                                 )
+    #         goal_predict.orientation = Quaternion(x=quat[0], y=quat[1],
+    #                                                 z=quat[2], w=quat[3]
+    #                                                 )
 
-            projected_point = self.get_projected_point(
-                        detection_pose = goal_predict,
-                        distance = APPROACH_EXECUTE_ARGS['distance_to_goal']
-                        ).point
+    #         projected_point = self.get_projected_point(
+    #                     detection_pose = goal_predict,
+    #                     distance = APPROACH_EXECUTE_ARGS['distance_to_goal']
+    #                     ).point
             
-            self.app.path_available = await self.check_path_available(
-                                                        projected_point.x,
-                                                        projected_point.y,
-                                                        self.app.angle_initial
-                                                        )
+    #         self.app.path_available = await self.check_path_available(
+    #                                                     projected_point.x,
+    #                                                     projected_point.y,
+    #                                                     self.app.angle_initial
+    #                                                     )
             
-            print(f'path available: {self.app.path_available}')
+    #         print(f'path available: {self.app.path_available}')
 
 
-        # Compute the desired coordinates to navigate to
-        if self.app.path_available and not self.app.nav.is_navigating():
-            self.app.path_available = False
+    #     # Compute the desired coordinates to navigate to
+    #     if self.app.path_available and not self.app.nav.is_navigating():
+    #         self.app.path_available = False
 
-            # Inform patient of arrival
-            await self.app.ui.display_animation(**UI_APPROACHING)
-            await self.play_sound_with_leds(
-                f'VOICE_APPROACHING_{self.app.language}')
+    #         # Inform patient of arrival
+    #         await self.app.ui.display_animation(**UI_APPROACHING)
+    #         await self.play_sound_with_leds(
+    #             f'VOICE_APPROACHING_{self.app.language}')
 
-            # Navigate towards the patient
-            try:
-                await self.app.nav.navigate_to_position(
-                                    x = projected_point.x,
-                                    y = projected_point.y,
-                                    angle = self.app.angle_initial,
-                                    pos_unit = POSITION_UNIT.METERS,
-                                    ang_unit = ANGLE_UNIT.DEGREES,
-                                    wait = True,
-                                    callback_feedback = self.cb_nav_feedback,
-                                    callback_finish = self.cb_nav_finish
-                                    )
-                return True
+    #         # Navigate towards the patient
+    #         try:
+    #             await self.app.nav.navigate_to_position(
+    #                                 x = projected_point.x,
+    #                                 y = projected_point.y,
+    #                                 angle = self.app.angle_initial,
+    #                                 pos_unit = POSITION_UNIT.METERS,
+    #                                 ang_unit = ANGLE_UNIT.DEGREES,
+    #                                 wait = True,
+    #                                 callback_feedback = self.cb_nav_feedback,
+    #                                 callback_finish = self.cb_nav_finish
+    #                                 )
+    #             return True
 
-            except Exception as e:
-                self.app.log.debug(f'got exception - {e} in approach_sequence')
+    #         except Exception as e:
+    #             self.app.log.debug(f'got exception - {e} in approach_sequence')
 
-            return False
+    #         return False
 
 
     async def check_path_available(self,
@@ -943,208 +943,208 @@ class Helpers:
             return False
           
 
-    async def stinky_feet_sequence(self):
-        '''
-        Approach to feet sequence
-        The function returns a bool indicating whether the approach was
-        successful
-        '''
-         # Reset feet detection flag, create a queue
-        self.app.feet_detected = False
-        feet_detected_at_least_once = False
-        self.feet_queue = deque(maxlen=5)
+    # async def stinky_feet_sequence(self):
+    #     '''
+    #     Approach to feet sequence
+    #     The function returns a bool indicating whether the approach was
+    #     successful
+    #     '''
+    #      # Reset feet detection flag, create a queue
+    #     self.app.feet_detected = False
+    #     feet_detected_at_least_once = False
+    #     self.feet_queue = deque(maxlen=5)
 
-        # Create listener
-        self.app.feet_detector.set_img_detections_callback(
-                callback = self.cb_stinky_feet,
-                as_dict = True,
-                call_without_detections = True,
-                cameras_controller = self.app.cameras
-            )
+    #     # Create listener
+    #     self.app.feet_detector.set_img_detections_callback(
+    #             callback = self.cb_stinky_feet,
+    #             as_dict = True,
+    #             call_without_detections = True,
+    #             cameras_controller = self.app.cameras
+    #         )
         
-        # Inform the patient, give the model a few seconds to detect
-        await self.play_sound_with_leds(
-            f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}')
+    #     # Inform the patient, give the model a few seconds to detect
+    #     await self.play_sound_with_leds(
+    #         f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}')
 
-        await self.app.sleep(3.0)
+    #     await self.app.sleep(3.0)
         
-        # Scan backwards, left and right, if you cant find a detection
-        if not self.app.feet_detected:
-            await self.play_sound_with_leds(
-                f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
-            await self.scan_for_detection()
+    #     # Scan backwards, left and right, if you cant find a detection
+    #     if not self.app.feet_detected:
+    #         await self.play_sound_with_leds(
+    #             f'VOICE_RETRYING_TO_REACH_TARGET_{self.app.language}')
+    #         await self.scan_for_detection()
 
-        # Move forwards as long as you detect feet
-        while self.app.feet_detected:
-            feet_detected_at_least_once = True
-            try:
-                # await self.app.motion.set_velocity(
-                #     x_velocity = 0.03,
-                #     y_velocity = 0.0,
-                #     angular_velocity = 0.0,
-                #     duration = 0.75,
-                #     enable_obstacles = False,
-                #     wait = False
-                # )
-                await self.set_velocity_wrapper(
-                    x_velocity = 0.03,
-                    y_velocity = 0.0,
-                    angular_velocity = 0.0,
-                    duration = 0.75,
-                    enable_obstacles = False,
-                    wait = False
-                )
+    #     # Move forwards as long as you detect feet
+    #     while self.app.feet_detected:
+    #         feet_detected_at_least_once = True
+    #         try:
+    #             # await self.app.motion.set_velocity(
+    #             #     x_velocity = 0.03,
+    #             #     y_velocity = 0.0,
+    #             #     angular_velocity = 0.0,
+    #             #     duration = 0.75,
+    #             #     enable_obstacles = False,
+    #             #     wait = False
+    #             # )
+    #             await self.set_velocity_wrapper(
+    #                 x_velocity = 0.03,
+    #                 y_velocity = 0.0,
+    #                 angular_velocity = 0.0,
+    #                 duration = 0.75,
+    #                 enable_obstacles = False,
+    #                 wait = False
+    #             )
 
-                # Stop moving if you're too close
-                if self.app.distance_to_feet < FEET_DIST_BEFORE_STOP or  \
-                    self.is_bbox_at_bottom(image = self.current_image,
-                                            thresh_percentage = 0.1,
-                                            bbox_ymin = self.app.bbox_ymin
-                                            ) or self.app.stop_condition or self.app.dev_mode_flag:
-                    break
-            except Exception as e:
-                self.app.log.warn(f'linear movement failed, error: {e}')
+    #             # Stop moving if you're too close
+    #             if self.app.distance_to_feet < FEET_DIST_BEFORE_STOP or  \
+    #                 self.is_bbox_at_bottom(image = self.current_image,
+    #                                         thresh_percentage = 0.1,
+    #                                         bbox_ymin = self.app.bbox_ymin
+    #                                         ) or self.app.stop_condition or self.app.dev_mode_flag:
+    #                 break
+    #         except Exception as e:
+    #             self.app.log.warn(f'linear movement failed, error: {e}')
             
-        # When the feet are no longer detected, compute the final distance
-        # to move forwards
-        if self.app.distance_to_feet > 0 and \
-                feet_detected_at_least_once and not self.app.stop_condition:  
-            try:
-                unweighted_distance = np.mean(self.feet_queue)
-                weighted_distance = self.check_final_queue(self.feet_queue)
+    #     # When the feet are no longer detected, compute the final distance
+    #     # to move forwards
+    #     if self.app.distance_to_feet > 0 and \
+    #             feet_detected_at_least_once and not self.app.stop_condition:  
+    #         try:
+    #             unweighted_distance = np.mean(self.feet_queue)
+    #             weighted_distance = self.check_final_queue(self.feet_queue)
 
-                if type(weighted_distance) is not int:
-                    weighted_distance = unweighted_distance
+    #             if type(weighted_distance) is not int:
+    #                 weighted_distance = unweighted_distance
 
-                self.app.log.warn(f'Moving final distance - {weighted_distance}')
-                # await self.app.motion.move_linear(
-                #     distance = weighted_distance,
-                #     x_velocity = 0.03,
-                #     wait = True,
-                #     callback_feedback_async = self.cb_motion,
-                #     enable_obstacles = False
-                # )
-                await self.move_linear_wrapper(distance = weighted_distance,
-                                                x_velocity = 0.03,
-                                                wait = True,
-                                                callback_feedback_async = self.cb_motion,
-                                                enable_obstacles = False) 
-            except Exception as e:
-                self.app.log.warn(f"Couldn't move final distance - \
-                                    {self.app.distance_to_feet} because of \
-                                    error - {e}")
+    #             self.app.log.warn(f'Moving final distance - {weighted_distance}')
+    #             # await self.app.motion.move_linear(
+    #             #     distance = weighted_distance,
+    #             #     x_velocity = 0.03,
+    #             #     wait = True,
+    #             #     callback_feedback_async = self.cb_motion,
+    #             #     enable_obstacles = False
+    #             # )
+    #             await self.move_linear_wrapper(distance = weighted_distance,
+    #                                             x_velocity = 0.03,
+    #                                             wait = True,
+    #                                             callback_feedback_async = self.cb_motion,
+    #                                             enable_obstacles = False) 
+    #         except Exception as e:
+    #             self.app.log.warn(f"Couldn't move final distance - \
+    #                                 {self.app.distance_to_feet} because of \
+    #                                 error - {e}")
 
-            return True        
-        return False
+    #         return True        
+    #     return False
 
 
 
-    def check_final_queue(self,
-                          queue: deque
-                          ):
-        '''
-        Compute weighted average using a gaussian filter
-        '''
+    # def check_final_queue(self,
+    #                       queue: deque
+    #                       ):
+    #     '''
+    #     Compute weighted average using a gaussian filter
+    #     '''
 
-        # Get mean and std, initiate params
-        queue_mean = np.mean(queue)
-        queue_std = np.std(queue)
+    #     # Get mean and std, initiate params
+    #     queue_mean = np.mean(queue)
+    #     queue_std = np.std(queue)
 
-        weights = np.exp(-0.5 * ((queue - queue_mean) / (queue_std)) ** 2)
-        normalized_weights = weights / weights.sum()
-        weighted_average = np.sum(queue * normalized_weights)
+    #     weights = np.exp(-0.5 * ((queue - queue_mean) / (queue_std)) ** 2)
+    #     normalized_weights = weights / weights.sum()
+    #     weighted_average = np.sum(queue * normalized_weights)
         
-        return weighted_average
+    #     return weighted_average
 
 
 
-    def is_bbox_at_bottom(self,
-                          image: np.array,
-                          thresh_percentage: int,
-                          bbox_ymin: int
-                          ):
-        '''
-        Check if a bounding box is at the bottom of the image
-        INPUTS
-            image - an image array
-            threshold_percentage - the percentage of the image to consider
-                                    a detection to be at the bottom
-            bbox_ymin - the lowest point of the detection
+    # def is_bbox_at_bottom(self,
+    #                       image: np.array,
+    #                       thresh_percentage: int,
+    #                       bbox_ymin: int
+    #                       ):
+    #     '''
+    #     Check if a bounding box is at the bottom of the image
+    #     INPUTS
+    #         image - an image array
+    #         threshold_percentage - the percentage of the image to consider
+    #                                 a detection to be at the bottom
+    #         bbox_ymin - the lowest point of the detection
 
-        OUTPUTS
-            The function returns a bool indicating whether a detection is at
-            the bottom of the image or not
-        '''
-        height = image.shape[0]
-        if height - bbox_ymin < thresh_percentage * height:
-            return True
-        return False
+    #     OUTPUTS
+    #         The function returns a bool indicating whether a detection is at
+    #         the bottom of the image or not
+    #     '''
+    #     height = image.shape[0]
+    #     if height - bbox_ymin < thresh_percentage * height:
+    #         return True
+    #     return False
 
 
 
-    async def get_user_feedback(self):
-        '''Ask the patient for feedback on the treatment'''
+    # async def get_user_feedback(self):
+    #     '''Ask the patient for feedback on the treatment'''
 
-        # Reset feedbacks and timer
-        self.reset_user_feedbacks()
-        counter = 0
+    #     # Reset feedbacks and timer
+    #     self.reset_user_feedbacks()
+    #     counter = 0
 
-        # Display the feedback options
-        await self.app.ui.display_choice_selector(**UI_FEEDBACK_END_TREATMENT,
-                                                  callback=self.cb_ui_feedback,
-                                                  wait = False)
+    #     # Display the feedback options
+    #     await self.app.ui.display_choice_selector(**UI_FEEDBACK_END_TREATMENT,
+    #                                               callback=self.cb_ui_feedback,
+    #                                               wait = False)
         
-        # Repeat the question every 20 sec, for 90 sec max 
-        start_time = time.time()
-        while self.app.ui_button_feedback != 'button pressed' and \
-                                                counter < INSTRUCTIONS_TIMEOUT:
+    #     # Repeat the question every 20 sec, for 90 sec max 
+    #     start_time = time.time()
+    #     while self.app.ui_button_feedback != 'button pressed' and \
+    #                                             counter < INSTRUCTIONS_TIMEOUT:
 
-            self.app.log.debug(
-                        f'ui button feedback: {self.app.ui_button_feedback}')
+    #         self.app.log.debug(
+    #                     f'ui button feedback: {self.app.ui_button_feedback}')
 
-            if self.app.stop_condition is True or self.app.dev_mode_flag is True:
-                break
+    #         if self.app.stop_condition is True or self.app.dev_mode_flag is True:
+    #             break
 
-            if counter%20 == 0:
-                await self.play_sound_with_leds(
-                    f'VOICE_FEEDBACK_{self.app.language}',
-                    wait = False
-                    )
-            counter += 1
-            await self.app.sleep(1)
+    #         if counter%20 == 0:
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_FEEDBACK_{self.app.language}',
+    #                 wait = False
+    #                 )
+    #         counter += 1
+    #         await self.app.sleep(1)
         
-        end_time = time.time()
-        self.app.treatment_time = end_time - start_time
-        await self.play_sound_with_leds(
-            'button_pressed_sound',
-            leds = False,
-            wait = False
-            )
-        await self.turn_on_leds(animation = 'MOTION_10_VER_3',
-                            color = 'green',
-                            wait = True
-                            )
-        # Update fleet
-        try:
-            user_choice = self.app.ui_button_feedback_id['selected_option']['id']
-            USER_FEEDBACK = {5 : 'גבוהה', 6 : 'בינונית', 7 : 'נמוכה'}
+    #     end_time = time.time()
+    #     self.app.treatment_time = end_time - start_time
+    #     await self.play_sound_with_leds(
+    #         'button_pressed_sound',
+    #         leds = False,
+    #         wait = False
+    #         )
+    #     await self.turn_on_leds(animation = 'MOTION_10_VER_3',
+    #                         color = 'green',
+    #                         wait = True
+    #                         )
+    #     # Update fleet
+    #     try:
+    #         user_choice = self.app.ui_button_feedback_id['selected_option']['id']
+    #         USER_FEEDBACK = {5 : 'גבוהה', 6 : 'בינונית', 7 : 'נמוכה'}
 
-            if USER_FEEDBACK[user_choice] == 'גבוהה':
-                await self.play_sound_with_leds(
-                    f'VOICE_FEEDBACK_GOOD_{self.app.language}')
+    #         if USER_FEEDBACK[user_choice] == 'גבוהה':
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_FEEDBACK_GOOD_{self.app.language}')
                
-            elif USER_FEEDBACK[user_choice] == 'בינונית':
-                await self.play_sound_with_leds(
-                    f'VOICE_FEEDBACK_OKAY_{self.app.language}')
+    #         elif USER_FEEDBACK[user_choice] == 'בינונית':
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_FEEDBACK_OKAY_{self.app.language}')
                
-            elif USER_FEEDBACK[user_choice] == 'נמוכה':
-                await self.play_sound_with_leds(
-                    f'VOICE_FEEDBACK_BAD_{self.app.language}')
+    #         elif USER_FEEDBACK[user_choice] == 'נמוכה':
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_FEEDBACK_BAD_{self.app.language}')
 
-            await self.update_fleet(f"המטופל נתן פידבק {USER_FEEDBACK[user_choice]}")
+    #         await self.update_fleet(f"המטופל נתן פידבק {USER_FEEDBACK[user_choice]}")
 
-        except Exception as e:
-            self.app.log.warn(f'Got exception {e} in user_feedback, skipping it')
+    #     except Exception as e:
+    #         self.app.log.warn(f'Got exception {e} in user_feedback, skipping it')
 
 
 
@@ -1185,140 +1185,140 @@ class Helpers:
                 await task
 
 
-    async def select_finger_or_wand(self):
-        '''Get the clicking tool preference of the user'''
+    # async def select_finger_or_wand(self):
+    #     '''Get the clicking tool preference of the user'''
 
-        # Reset previous feedbacks, display the choice selector
-        self.reset_user_feedbacks()
-        await self.play_sound_with_leds(
-                    f'VOICE_EXPLAIN_FINGER_OR_WAND_{self.app.language}')
-        await self.app.ui.display_choice_selector(
-                                                **UI_SELECT_WAND_OR_FINGER,
-                                                callback = self.cb_ui_feedback,
-                                                wait = False
-                                                )
-        await self.play_sound_with_leds(
-                    f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
-                    wait = False
-                    )
+    #     # Reset previous feedbacks, display the choice selector
+    #     self.reset_user_feedbacks()
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_EXPLAIN_FINGER_OR_WAND_{self.app.language}')
+    #     await self.app.ui.display_choice_selector(
+    #                                             **UI_SELECT_WAND_OR_FINGER,
+    #                                             callback = self.cb_ui_feedback,
+    #                                             wait = False
+    #                                             )
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
+    #                 wait = False
+    #                 )
 
-        # Repeat the instructions every rep_time until button is pressed
-        start_time = time.time()
-        counter = 1
+    #     # Repeat the instructions every rep_time until button is pressed
+    #     start_time = time.time()
+    #     counter = 1
 
-        while self.app.ui_button_feedback == None:
-            if self.app.stop_condition is True or self.app.dev_mode_flag is True:
-                break
+    #     while self.app.ui_button_feedback == None:
+    #         if self.app.stop_condition is True or self.app.dev_mode_flag is True:
+    #             break
 
-            if counter%INSTRUCTIONS_REP_TIME  == 0:
-                await self.play_sound_with_leds(
-                    f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
-                    wait = False
-                    )                                   
-            await self.app.sleep(1)   
-            counter += 1
+    #         if counter%INSTRUCTIONS_REP_TIME  == 0:
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_FINGER_OR_WAND_CHOICE_{self.app.language}',
+    #                 wait = False
+    #                 )                                   
+    #         await self.app.sleep(1)   
+    #         counter += 1
 
-        end_time = time.time()
-        self.app.touch_item_time = end_time - start_time
-        self.app.log.info(f"{self.app.ui_button_feedback}")
+    #     end_time = time.time()
+    #     # self.app.touch_item_time = end_time - start_time
+    #     self.app.log.info(f"{self.app.ui_button_feedback}")
         
-        try:
-            await self.play_sound_with_leds(
-                'button_pressed_sound.wav',
-                leds = False,
-                wait = False
-                )
-            await self.turn_on_leds(animation = 'MOTION_10_VER_3',
-                                color = 'green',
-                                wait = True
-                                )
+    #     try:
+    #         await self.play_sound_with_leds(
+    #             'button_pressed_sound.wav',
+    #             leds = False,
+    #             wait = False
+    #             )
+    #         await self.turn_on_leds(animation = 'MOTION_10_VER_3',
+    #                             color = 'green',
+    #                             wait = True
+    #                             )
             
-            # Set the clicking tool preferences based on the user's choice
-            if self.app.ui_button_feedback_id['selected_option']['id'] == \
-                                                         TOUCH_ITEM['Wand']:
-                self.app.touch_item = 'Wand'
-                await self.app.ui.display_animation(**UI_TAKE_STICK)
-                await self.play_sound_with_leds(
-                    f'VOICE_TAKE_STICK_{self.app.language}')
-                await self.app.sleep(3)
+    #         # Set the clicking tool preferences based on the user's choice
+    #         if self.app.ui_button_feedback_id['selected_option']['id'] == \
+    #                                                      TOUCH_ITEM['Wand']:
+    #             self.app.touch_item = 'Wand'
+    #             await self.app.ui.display_animation(**UI_TAKE_STICK)
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_TAKE_STICK_{self.app.language}')
+    #             await self.app.sleep(3)
                 
-            elif self.app.ui_button_feedback['selected_option']['id'] == \
-                                                         TOUCH_ITEM['Hand']:
-                self.app.touch_item = 'Hand'
+    #         elif self.app.ui_button_feedback['selected_option']['id'] == \
+    #                                                      TOUCH_ITEM['Hand']:
+    #             self.app.touch_item = 'Hand'
                 
-        except Exception as e:
-            self.app.log.warn(f'Got exception {e} in select_finger_or_wand function, skipping it')
+    #     except Exception as e:
+    #         self.app.log.warn(f'Got exception {e} in select_finger_or_wand function, skipping it')
 
 
 
-    async def verify_id(self):
-        '''Verify the ID of the patient'''
+    # async def verify_id(self):
+    #     '''Verify the ID of the patient'''
 
-        # Reset feedbacks and timer
-        self.reset_user_feedbacks()
-        counter = 1
+    #     # Reset feedbacks and timer
+    #     self.reset_user_feedbacks()
+    #     counter = 1
 
-        # Choose the screen based on the language
-        verification_screen = UI_USER_VERIFY_1
-        if self.app.language == 'HEBREW':
-            verification_screen['title'] = \
-                            f'לפני שנתחיל, האם השם הוא {self.app.patient_name}?'
-        elif self.app.language == 'ENGLISH':
-            verification_screen['title'] = \
-                     f'Before we begin, is your name {self.app.patient_name}?'
+    #     # Choose the screen based on the language
+    #     verification_screen = UI_USER_VERIFY_1
+    #     if self.app.language == 'HEBREW':
+    #         verification_screen['title'] = \
+    #                         f'לפני שנתחיל, האם השם הוא {self.app.patient_name}?'
+    #     elif self.app.language == 'ENGLISH':
+    #         verification_screen['title'] = \
+    #                  f'Before we begin, is your name {self.app.patient_name}?'
 
-        # Ask the user to verify their ID
-        await self.app.ui.display_screen(**verification_screen)
-        await self.app.sleep(0.5)
+    #     # Ask the user to verify their ID
+    #     await self.app.ui.display_screen(**verification_screen)
+    #     await self.app.sleep(0.5)
 
-        await self.play_sound_with_leds(
-                    f'VOICE_VERIFY_PATIENT_{self.app.language}',
-                    wait = False
-                    )
-        await self.app.sleep(1.0)
-        await self.app.ui.display_choice_selector(
-                                                **UI_USER_VERIFY_2,
-                                                callback = self.cb_ui_feedback,
-                                                wait = False
-                                                )
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_VERIFY_PATIENT_{self.app.language}',
+    #                 wait = False
+    #                 )
+    #     await self.app.sleep(1.0)
+    #     await self.app.ui.display_choice_selector(
+    #                                             **UI_USER_VERIFY_2,
+    #                                             callback = self.cb_ui_feedback,
+    #                                             wait = False
+    #                                             )
 
-        # Repeat the verification until a timeout is reached or the button was
-        # pressed
-        while self.app.ui_button_feedback != 'button pressed' and \
-                                                counter < INSTRUCTIONS_TIMEOUT:
+    #     # Repeat the verification until a timeout is reached or the button was
+    #     # pressed
+    #     while self.app.ui_button_feedback != 'button pressed' and \
+    #                                             counter < INSTRUCTIONS_TIMEOUT:
 
-            if self.app.stop_condition is True or self.app.dev_mode_flag is True:
-                break
+    #         if self.app.stop_condition is True or self.app.dev_mode_flag is True:
+    #             break
                 
-            if counter%INSTRUCTIONS_REP_TIME == 0:
-                await self.play_sound_with_leds(
-                    f'VOICE_VERIFY_PATIENT_{self.app.language}')
+    #         if counter%INSTRUCTIONS_REP_TIME == 0:
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_VERIFY_PATIENT_{self.app.language}')
                 
-            counter += 1
-            await self.app.sleep(1)
+    #         counter += 1
+    #         await self.app.sleep(1)
         
-        # The button was pressed or timeout occured
-        await self.play_sound_with_leds(
-            'button_pressed_sound.wav',
-            leds = False,
-            wait = False
-            )
-        await self.turn_on_leds(animation = 'MOTION_10_VER_3',
-                            color = 'green',
-                            wait = True
-                            )
+    #     # The button was pressed or timeout occured
+    #     await self.play_sound_with_leds(
+    #         'button_pressed_sound.wav',
+    #         leds = False,
+    #         wait = False
+    #         )
+    #     await self.turn_on_leds(animation = 'MOTION_10_VER_3',
+    #                         color = 'green',
+    #                         wait = True
+    #                         )
 
-        # Leave the room if either no feedback is given or if its the wrong
-        # patient, otherwise continue
-        if self.app.ui_button_feedback is None or \
-            self.app.ui_button_feedback_id['selected_option']['id'] == \
-                                                        USER_VERIFY['False']:
-            await self.play_sound_with_leds(
-                    f'VOICE_ABORTED_BY_PATIENT_{self.app.language}')
-            self.app.bad_id = True
-            return
+    #     # Leave the room if either no feedback is given or if its the wrong
+    #     # patient, otherwise continue
+    #     if self.app.ui_button_feedback is None or \
+    #         self.app.ui_button_feedback_id['selected_option']['id'] == \
+    #                                                     USER_VERIFY['False']:
+    #         await self.play_sound_with_leds(
+    #                 f'VOICE_ABORTED_BY_PATIENT_{self.app.language}')
+    #         self.app.bad_id = True
+    #         return
         
-        self.app.user_verification_successful = True
+    #     self.app.user_verification_successful = True
 
 
 
@@ -1362,572 +1362,572 @@ class Helpers:
     
 
 
-    def temp_get_audio(self):
-        '''
-        Temporary way to get the dictionary with the buffer ID and recording
-        time, until we apply the changes to the sound controller that the
-        patch currently covers
-        '''
-        self.static_buffer_dict = self.reverse_dict(BUFFER_IDS)
-        self.static_buffer_dict = self.strip_prefix_suffix_from_keys(
-                                        orig_dict = self.static_buffer_dict,
-                                        prefix = 'dat:tts_audio/'
-                                        )
-        self.static_buffer_dict = self.strip_prefix_suffix_from_keys(
-                                        orig_dict = self.static_buffer_dict,
-                                        prefix = '.mp3'
-                                        )
-        self.rec_times_dict = self.strip_prefix_suffix_from_keys(
-                                                        orig_dict = REC_TIMES,
-                                                        prefix = '.mp3'
-                                                        )
+    # def temp_get_audio(self):
+    #     '''
+    #     Temporary way to get the dictionary with the buffer ID and recording
+    #     time, until we apply the changes to the sound controller that the
+    #     patch currently covers
+    #     '''
+    #     self.static_buffer_dict = self.reverse_dict(BUFFER_IDS)
+    #     self.static_buffer_dict = self.strip_prefix_suffix_from_keys(
+    #                                     orig_dict = self.static_buffer_dict,
+    #                                     prefix = 'dat:tts_audio/'
+    #                                     )
+    #     self.static_buffer_dict = self.strip_prefix_suffix_from_keys(
+    #                                     orig_dict = self.static_buffer_dict,
+    #                                     prefix = '.mp3'
+    #                                     )
+    #     self.rec_times_dict = self.strip_prefix_suffix_from_keys(
+    #                                                     orig_dict = REC_TIMES,
+    #                                                     prefix = '.mp3'
+    #                                                     )
 
 
-        self.dynamic_buffers_dict = self.reverse_dict(self.current_buffer_dict)
-        self.dynamic_buffers_dict = self.strip_prefix_suffix_from_keys(
-                                        orig_dict = self.dynamic_buffers_dict,
-                                        prefix = 'dat:tts_audio/'
-                                        )
-        self.dynamic_buffers_dict = self.strip_prefix_suffix_from_keys(
-                                        orig_dict = self.dynamic_buffers_dict,
-                                        prefix = '.mp3'
-                                        )
+    #     self.dynamic_buffers_dict = self.reverse_dict(self.current_buffer_dict)
+    #     self.dynamic_buffers_dict = self.strip_prefix_suffix_from_keys(
+    #                                     orig_dict = self.dynamic_buffers_dict,
+    #                                     prefix = 'dat:tts_audio/'
+    #                                     )
+    #     self.dynamic_buffers_dict = self.strip_prefix_suffix_from_keys(
+    #                                     orig_dict = self.dynamic_buffers_dict,
+    #                                     prefix = '.mp3'
+    #                                     )
         
 
-        for item in self.app.dynamic_recordings_list:
-            self.static_buffer_dict[item.strip('.mp3')] = \
-                                self.dynamic_buffers_dict[item.strip('.mp3')]
-            self.rec_times_dict[item.strip('.mp3')] = self.rec_times[item]
+    #     for item in self.app.dynamic_recordings_list:
+    #         self.static_buffer_dict[item.strip('.mp3')] = \
+    #                             self.dynamic_buffers_dict[item.strip('.mp3')]
+    #         self.rec_times_dict[item.strip('.mp3')] = self.rec_times[item]
 
-        self.combined_dict = self.combine_dicts(self.static_buffer_dict, self.rec_times_dict)
+    #     self.combined_dict = self.combine_dicts(self.static_buffer_dict, self.rec_times_dict)
 
-        # print(f'combined dict: {self.combined_dict}')
-        # print('-'*100)
-
-
-
-    async def session_num(self, num):
-        '''Perform a session based on the given order from the app args'''
-        if num == 1:
-            await self.cognitive_session()
-        if num == 2:
-            await self.video_session()
-        if num == 3:
-            await self.upper_limb_session()
+    #     # print(f'combined dict: {self.combined_dict}')
+    #     # print('-'*100)
 
 
 
-    def choose_random_success_voice(self):
-        '''
-        Choose a random voice to play to the patient when they chose a correct
-        answer in one of the games
-        '''
-        rand_num = np.random.uniform()
-        if 0 <= rand_num <= 0.33:
-            voice = f'VOICE_CARD_MATCH_2_{self.app.language}'
-        elif 0.33 < rand_num <= 0.66:
-            voice = f'VOICE_CARD_MATCH_3_{self.app.language}'
-        else:
-            voice = f'VOICE_CARD_MATCH_4_{self.app.language}'
+    # async def session_num(self, num):
+    #     '''Perform a session based on the given order from the app args'''
+    #     if num == 1:
+    #         await self.cognitive_session()
+    #     if num == 2:
+    #         await self.video_session()
+    #     if num == 3:
+    #         await self.upper_limb_session()
 
-        return voice
+
+
+    # def choose_random_success_voice(self):
+    #     '''
+    #     Choose a random voice to play to the patient when they chose a correct
+    #     answer in one of the games
+    #     '''
+    #     rand_num = np.random.uniform()
+    #     if 0 <= rand_num <= 0.33:
+    #         voice = f'VOICE_CARD_MATCH_2_{self.app.language}'
+    #     elif 0.33 < rand_num <= 0.66:
+    #         voice = f'VOICE_CARD_MATCH_3_{self.app.language}'
+    #     else:
+    #         voice = f'VOICE_CARD_MATCH_4_{self.app.language}'
+
+    #     return voice
     
 
 
-    def choose_random_fail_voice(self):
-        '''
-        Choose a random voice to play to the patient when they chose an
-        incorrect answer in one of the games
-        '''
-        rand_num = np.random.uniform()
-        if 0 <= rand_num <= 0.5:
-            voice = f'VOICE_CARD_MISMATCH_1_{self.app.language}'
-        elif 0.5 < rand_num <= 1.0:
-            voice = f'VOICE_CARD_MISMATCH_2_{self.app.language}'
+    # def choose_random_fail_voice(self):
+    #     '''
+    #     Choose a random voice to play to the patient when they chose an
+    #     incorrect answer in one of the games
+    #     '''
+    #     rand_num = np.random.uniform()
+    #     if 0 <= rand_num <= 0.5:
+    #         voice = f'VOICE_CARD_MISMATCH_1_{self.app.language}'
+    #     elif 0.5 < rand_num <= 1.0:
+    #         voice = f'VOICE_CARD_MISMATCH_2_{self.app.language}'
 
-        return voice
+    #     return voice
 
 
 
-    async def cognitive_session(self):
-        await self.update_fleet("התחלת פעילות משחקים")
+    # async def cognitive_session(self):
+    #     await self.update_fleet("התחלת פעילות משחקים")
 
-        # By default, the touch option is by hand, unless the user chose with a
-        # wand
-        with_wand=False
-        if self.app.touch_item == 'Wand':
-            with_wand=True
+    #     # By default, the touch option is by hand, unless the user chose with a
+    #     # wand
+    #     with_wand=False
+    #     if self.app.touch_item == 'Wand':
+    #         with_wand=True
         
-        # Give guidelines and instructions
-        await self.exercise_instructions()
-        await self.wait_for_button(screen = UI_BEGIN, button_type = 'start')
+    #     # Give guidelines and instructions
+    #     await self.exercise_instructions()
+    #     await self.wait_for_button(screen = UI_BEGIN, button_type = 'start')
         
-        # Open the games one by one
-        await self.difference_game()
-        await self.memory_game()
-        await self.trivia_game()
-        # await self.simon_game()
+    #     # Open the games one by one
+    #     await self.difference_game()
+    #     await self.memory_game()
+    #     await self.trivia_game()
+    #     # await self.simon_game()
 
-        # Give the user instructions after the games 
-        await self.exercise_instructions(return_wand = with_wand)
-        await self.app.sleep(1)
-        await self.app.ui.display_screen(**UI_CONGRATS)
+    #     # Give the user instructions after the games 
+    #     await self.exercise_instructions(return_wand = with_wand)
+    #     await self.app.sleep(1)
+    #     await self.app.ui.display_screen(**UI_CONGRATS)
 
 
-    async def video_session(self):
-        await self.update_fleet("התחלת ציפייה בסרטוני הדרכה")
-        await self.create_session(link = self.app.video_link, video = True)
-        
-
-    async def upper_limb_session(self):
-        await self.update_fleet('התחיל תרגול גפה עליונה')
-        await self.exercise_instructions(full_instructions = True)
-        await self.play_sound_with_leds(f'VOICE_MOVING_BACKWARDS_{self.app.language}')
-        await self.app.motion.set_velocity(x_velocity = -0.03,
-                                           y_velocity = 0.0,
-                                           angular_velocity = 0.0,
-                                           duration = 5.0,
-                                           ang_unit = ANGLE_UNIT.RADIANS,
-                                           wait = True
-                                           )
-        await self.create_session(link = self.app.exercise_link, video = True)
-        await self.play_sound_with_leds(f'VOICE_MOVING_FORWARDS_{self.app.language}')
-        await self.app.motion.set_velocity(x_velocity = 0.03,
-                                           y_velocity = 0.0,
-                                           angular_velocity = 0.0,
-                                           duration = 5.0,
-                                           ang_unit = ANGLE_UNIT.RADIANS,
-                                           wait = True
-                                           )
+    # async def video_session(self):
+    #     await self.update_fleet("התחלת ציפייה בסרטוני הדרכה")
+    #     await self.create_session(link = self.app.video_link, video = True)
         
 
-    async def exercise_instructions(self, return_wand = False, full_instructions = False):
+    # async def upper_limb_session(self):
+    #     await self.update_fleet('התחיל תרגול גפה עליונה')
+    #     await self.exercise_instructions(full_instructions = True)
+    #     await self.play_sound_with_leds(f'VOICE_MOVING_BACKWARDS_{self.app.language}')
+    #     await self.app.motion.set_velocity(x_velocity = -0.03,
+    #                                        y_velocity = 0.0,
+    #                                        angular_velocity = 0.0,
+    #                                        duration = 5.0,
+    #                                        ang_unit = ANGLE_UNIT.RADIANS,
+    #                                        wait = True
+    #                                        )
+    #     await self.create_session(link = self.app.exercise_link, video = True)
+    #     await self.play_sound_with_leds(f'VOICE_MOVING_FORWARDS_{self.app.language}')
+    #     await self.app.motion.set_velocity(x_velocity = 0.03,
+    #                                        y_velocity = 0.0,
+    #                                        angular_velocity = 0.0,
+    #                                        duration = 5.0,
+    #                                        ang_unit = ANGLE_UNIT.RADIANS,
+    #                                        wait = True
+    #                                        )
+        
 
-        # Ask patient to return the wand in the end of a screen exercise
-        if return_wand is True:
-            await self.app.ui.display_animation(UI_RETURN_STICK)
-            await self.play_sound_with_leds(f'VOICE_RETURN_STICK_{self.app.language}')
-            await self.app.sleep(0.5)
+    # async def exercise_instructions(self, return_wand = False, full_instructions = False):
 
-        # Give full instructions when not doing a screen exercise
-        elif full_instructions is True:
-            running_tasks = [
-                self.app.ui.display_animation(UI_SESSION_EMPHASES),
-                self.play_sound_with_leds(f'VOICE_SESSION_EMPHASES_{self.app.language}'),
-                self.app.ui.display_animation(UI_SIT_STRAIGHT),
-                self.play_sound_with_leds(f'VOICE_SIT_STRAIGHT_{self.app.language}'),
-                self.app.ui.display_animation(UI_LEGS_ON_FLOOR),
-                self.play_sound_with_leds(f'VOICE_LEGS_ON_FLOOR_{self.app.language}'),
-                self.app.ui.display_animation(UI_STRAIGHT_HEAD),
-                self.play_sound_with_leds(f'VOICE_STRAIGHT_HEAD_{self.app.language}'),
-                self.app.ui.display_animation(UI_NO_TIME_FOR_CAUTION),
-                self.play_sound_with_leds(f'VOICE_NO_TIME_FOR_CAUTION_{self.app.language}')
-                ]
+    #     # Ask patient to return the wand in the end of a screen exercise
+    #     if return_wand is True:
+    #         await self.app.ui.display_animation(UI_RETURN_STICK)
+    #         await self.play_sound_with_leds(f'VOICE_RETURN_STICK_{self.app.language}')
+    #         await self.app.sleep(0.5)
 
-            # Run tasks, stop incase of stop flag
-            for task in running_tasks:
-                if self.app.stop_condition is True:
-                    return
-                else:
-                    await task
+    #     # Give full instructions when not doing a screen exercise
+    #     elif full_instructions is True:
+    #         running_tasks = [
+    #             self.app.ui.display_animation(UI_SESSION_EMPHASES),
+    #             self.play_sound_with_leds(f'VOICE_SESSION_EMPHASES_{self.app.language}'),
+    #             self.app.ui.display_animation(UI_SIT_STRAIGHT),
+    #             self.play_sound_with_leds(f'VOICE_SIT_STRAIGHT_{self.app.language}'),
+    #             self.app.ui.display_animation(UI_LEGS_ON_FLOOR),
+    #             self.play_sound_with_leds(f'VOICE_LEGS_ON_FLOOR_{self.app.language}'),
+    #             self.app.ui.display_animation(UI_STRAIGHT_HEAD),
+    #             self.play_sound_with_leds(f'VOICE_STRAIGHT_HEAD_{self.app.language}'),
+    #             self.app.ui.display_animation(UI_NO_TIME_FOR_CAUTION),
+    #             self.play_sound_with_leds(f'VOICE_NO_TIME_FOR_CAUTION_{self.app.language}')
+    #             ]
+
+    #         # Run tasks, stop incase of stop flag
+    #         for task in running_tasks:
+    #             if self.app.stop_condition is True:
+    #                 return
+    #             else:
+    #                 await task
 
 
-    async def difference_game(self):
-        '''Open a difference game session'''
+    # async def difference_game(self):
+    #     '''Open a difference game session'''
 
-        # Reset feedback
-        self.reset_user_feedbacks()
+    #     # Reset feedback
+    #     self.reset_user_feedbacks()
 
-        # Open game
-        await self.app.ui.open_game(
-            game = 'FindDifference',
-            back_button_text = '',
-            title = 'אנא לחצו כדי להתחיל',
-            button_text = 'התחל',
-            pageTitle = 'מצא את ההבדלים',
-            theme = UI_THEME_TYPE.WHITE,
-            difficulty = self.app.difference_game_difficulty,
-            wait = False,
-            feedback_callback_async = self.async_cb_feedback_games,
-            finish_callback_async = self.async_cb_finish_games,
-            custom_style = CUSTOM_STYLE,
-            photo_title = '',
-            loaderTime = '15',
-            loaderText = '!בהצלחה',
-            chosen_language = self.app.language[:2].lower(),
-            end_game_text = 'End Game',
-            show_start_modal = False,
-            start_button_timeout = 0.0
-        )
+    #     # Open game
+    #     await self.app.ui.open_game(
+    #         game = 'FindDifference',
+    #         back_button_text = '',
+    #         title = 'אנא לחצו כדי להתחיל',
+    #         button_text = 'התחל',
+    #         pageTitle = 'מצא את ההבדלים',
+    #         theme = UI_THEME_TYPE.WHITE,
+    #         difficulty = self.app.difference_game_difficulty,
+    #         wait = False,
+    #         feedback_callback_async = self.async_cb_feedback_games,
+    #         finish_callback_async = self.async_cb_finish_games,
+    #         custom_style = CUSTOM_STYLE,
+    #         photo_title = '',
+    #         loaderTime = '15',
+    #         loaderText = '!בהצלחה',
+    #         chosen_language = self.app.language[:2].lower(),
+    #         end_game_text = 'End Game',
+    #         show_start_modal = False,
+    #         start_button_timeout = 0.0
+    #     )
 
-        # Explain the game
-        await self.play_sound_with_leds(
-                    f'VOICE_DIFFERENCE_GAME_{self.app.language}')
+    #     # Explain the game
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_DIFFERENCE_GAME_{self.app.language}')
 
-        # Play the game
-        last_stage = self.app.games_feedback['stage']
-        last_feedback = self.app.games_feedback.copy()
-        i = 0
-        while self.app.games_feedback['action'] != 'game-completed':
-            # Continue to next stage
-            if self.app.games_feedback['stage'] != last_stage and \
-                                    last_feedback != self.app.games_feedback:
-                last_stage = self.app.games_feedback['stage']
-                last_feedback = self.app.games_feedback.copy()
-                await self.play_sound_with_leds(
-                    f'VOICE_CONTINUE_STAGE_{self.app.language}')
+    #     # Play the game
+    #     last_stage = self.app.games_feedback['stage']
+    #     last_feedback = self.app.games_feedback.copy()
+    #     i = 0
+    #     while self.app.games_feedback['action'] != 'game-completed':
+    #         # Continue to next stage
+    #         if self.app.games_feedback['stage'] != last_stage and \
+    #                                 last_feedback != self.app.games_feedback:
+    #             last_stage = self.app.games_feedback['stage']
+    #             last_feedback = self.app.games_feedback.copy()
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_CONTINUE_STAGE_{self.app.language}')
             
-            # Correct guess feedback
-            elif self.app.games_feedback['last_try_success'] and  \
-                                    last_feedback != self.app.games_feedback:
-                last_feedback = self.app.games_feedback.copy()
+    #         # Correct guess feedback
+    #         elif self.app.games_feedback['last_try_success'] and  \
+    #                                 last_feedback != self.app.games_feedback:
+    #             last_feedback = self.app.games_feedback.copy()
 
-                if self.app.games_feedback['successful_guess'] == 1:
-                    await self.play_sound_with_leds(
-                        f'VOICE_CARD_MATCH_1_{self.app.language}')
+    #             if self.app.games_feedback['successful_guess'] == 1:
+    #                 await self.play_sound_with_leds(
+    #                     f'VOICE_CARD_MATCH_1_{self.app.language}')
         
-                else:
-                    voice = self.choose_random_success_voice()
-                    await self.play_sound_with_leds(voice)
+    #             else:
+    #                 voice = self.choose_random_success_voice()
+    #                 await self.play_sound_with_leds(voice)
 
-            # Incorrect guess feedback
-            elif not self.app.games_feedback['last_try_success'] and \
-                                    last_feedback != self.app.games_feedback:
-                last_feedback = self.app.games_feedback.copy()
+    #         # Incorrect guess feedback
+    #         elif not self.app.games_feedback['last_try_success'] and \
+    #                                 last_feedback != self.app.games_feedback:
+    #             last_feedback = self.app.games_feedback.copy()
 
-                if i%2 == 0:
-                    voice = self.choose_random_fail_voice()
-                    await self.play_sound_with_leds(voice)
-                i += 1
+    #             if i%2 == 0:
+    #                 voice = self.choose_random_fail_voice()
+    #                 await self.play_sound_with_leds(voice)
+    #             i += 1
                
 
-            if self.app.ui_button_feedback == 'button_pressed' or \
-                                            self.app.stop_condition is True:
-                break
+    #         if self.app.ui_button_feedback == 'button_pressed' or \
+    #                                         self.app.stop_condition is True:
+    #             break
             
-            await self.app.sleep(1.0)
+    #         await self.app.sleep(1.0)
 
-        # Congratulate the patient upon game completion
-        await self.play_sound_with_leds(
-                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+    #     # Congratulate the patient upon game completion
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_GAME_COMPLETED_{self.app.language}')
         
 
-    async def memory_game(self):
-        '''Open a memory game session'''
+    # async def memory_game(self):
+    #     '''Open a memory game session'''
 
-        # Reset feedback
-        self.reset_user_feedbacks()
-        await self.app.ui.open_game(
-                        game = 'MemoryGame',
-                        difficulty = self.app.memory_game_difficulty,
-                        back_button_text = '',
-                        title = 'משחק הזכרון',
-                        button_text = 'התחל',
-                        loaderText = '!בהצלחה',
-                        loaderTime = '5',
-                        theme = UI_THEME_TYPE.WHITE,
-                        show_start_modal = True,
-                        start_button_timeout = 7.0,
-                        chosen_language = self.app.language[:2].lower(),
-                        end_game_text = 'End Game',
-                        wait = False,
-                        feedback_callback_async = self.async_cb_feedback_games,
-                        finish_callback_async = self.async_cb_finish_games,
-                        custom_style = CUSTOM_STYLE_GAMES
-                        )
+    #     # Reset feedback
+    #     self.reset_user_feedbacks()
+    #     await self.app.ui.open_game(
+    #                     game = 'MemoryGame',
+    #                     difficulty = self.app.memory_game_difficulty,
+    #                     back_button_text = '',
+    #                     title = 'משחק הזכרון',
+    #                     button_text = 'התחל',
+    #                     loaderText = '!בהצלחה',
+    #                     loaderTime = '5',
+    #                     theme = UI_THEME_TYPE.WHITE,
+    #                     show_start_modal = True,
+    #                     start_button_timeout = 7.0,
+    #                     chosen_language = self.app.language[:2].lower(),
+    #                     end_game_text = 'End Game',
+    #                     wait = False,
+    #                     feedback_callback_async = self.async_cb_feedback_games,
+    #                     finish_callback_async = self.async_cb_finish_games,
+    #                     custom_style = CUSTOM_STYLE_GAMES
+    #                     )
         
-        # Explain the game
-        await self.play_sound_with_leds(
-                    f'VOICE_MEMORY_GAME_{self.app.language}')
+    #     # Explain the game
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_MEMORY_GAME_{self.app.language}')
        
-        # Give the patient feedback until the game is complete
-        last_feedback = self.app.games_feedback.copy()
-        i = 0
-        while self.app.games_feedback['action'] != 'game-completed':
-            # Correct card match feedback
-            if self.app.games_feedback['last_try_success'] and \
-                                     self.app.games_feedback != last_feedback:
-                last_feedback = self.app.games_feedback.copy()
-                if self.app.games_feedback['completed_cards'] == 2:
-                    await self.play_sound_with_leds(
-                        f'VOICE_CARD_MATCH_1_{self.app.language}')
-                elif self.app.games_feedback['completed_cards'] == \
-                                 self.app.games_feedback['amount_of_cards']-2:
-                    await self.play_sound_with_leds(
-                        f'VOICE_CARD_MATCH_LAST_{self.app.language}')
+    #     # Give the patient feedback until the game is complete
+    #     last_feedback = self.app.games_feedback.copy()
+    #     i = 0
+    #     while self.app.games_feedback['action'] != 'game-completed':
+    #         # Correct card match feedback
+    #         if self.app.games_feedback['last_try_success'] and \
+    #                                  self.app.games_feedback != last_feedback:
+    #             last_feedback = self.app.games_feedback.copy()
+    #             if self.app.games_feedback['completed_cards'] == 2:
+    #                 await self.play_sound_with_leds(
+    #                     f'VOICE_CARD_MATCH_1_{self.app.language}')
+    #             elif self.app.games_feedback['completed_cards'] == \
+    #                              self.app.games_feedback['amount_of_cards']-2:
+    #                 await self.play_sound_with_leds(
+    #                     f'VOICE_CARD_MATCH_LAST_{self.app.language}')
                    
-                else:
-                    voice = self.choose_random_success_voice()
-                    await self.play_sound_with_leds(voice)
+    #             else:
+    #                 voice = self.choose_random_success_voice()
+    #                 await self.play_sound_with_leds(voice)
         
 
-            # Incorrect card match feedback
-            elif not self.app.games_feedback['last_try_success'] and \
-                self.app.games_feedback['failed_attempts'] != \
-                                            last_feedback['failed_attempts']:
-                last_feedback = self.app.games_feedback.copy()        
-                if i%2 == 0:
-                    voice = self.choose_random_fail_voice()
-                    await self.play_sound_with_leds(voice)
-                else:
-                    await self.play_sound_with_leds('wrong_answer_sound')
-                i += 1
+    #         # Incorrect card match feedback
+    #         elif not self.app.games_feedback['last_try_success'] and \
+    #             self.app.games_feedback['failed_attempts'] != \
+    #                                         last_feedback['failed_attempts']:
+    #             last_feedback = self.app.games_feedback.copy()        
+    #             if i%2 == 0:
+    #                 voice = self.choose_random_fail_voice()
+    #                 await self.play_sound_with_leds(voice)
+    #             else:
+    #                 await self.play_sound_with_leds('wrong_answer_sound')
+    #             i += 1
         
 
-            # Break if stop condition
-            if self.app.ui_button_feedback == 'button_pressed' or self.app.stop_condition is True:
-                break
+    #         # Break if stop condition
+    #         if self.app.ui_button_feedback == 'button_pressed' or self.app.stop_condition is True:
+    #             break
 
-            await self.app.sleep(1.0)
+    #         await self.app.sleep(1.0)
 
-        # Congratulate the patient upon game completion
-        await self.play_sound_with_leds(
-                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+    #     # Congratulate the patient upon game completion
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_GAME_COMPLETED_{self.app.language}')
 
 
 
-    async def trivia_game(self):
-        '''Open a trivia game session'''
+    # async def trivia_game(self):
+    #     '''Open a trivia game session'''
 
-         # Reset feedback
-        self.reset_user_feedbacks()
+    #      # Reset feedback
+    #     self.reset_user_feedbacks()
 
-        loader_time = '21'
-        await self.app.ui.open_game(
-                        game = 'MemoryTriviaGame',
-                        difficulty = self.app.trivia_game_difficulty,
-                        back_button_text = '',
-                        button_text = 'התחל',
-                        title = 'משחק זכרון תמונות',
-                        photo_title = 'התבוננו וזכרו את פרטי התמונה',
-                        loaderText = '!בהצלחה',
-                        chosen_language = self.app.language[:2].lower(),
-                        end_game_text = 'End Game',
-                        loaderTime = loader_time,
-                        show_start_modal = True,
-                        start_button_timeout = 7.0,
-                        theme = UI_THEME_TYPE.WHITE,
-                        wait = False,
-                        feedback_callback_async = self.async_cb_feedback_games,
-                        finish_callback_async = self.async_cb_finish_games,
-                        custom_style = CUSTOM_STYLE_GAMES)
+    #     loader_time = '21'
+    #     await self.app.ui.open_game(
+    #                     game = 'MemoryTriviaGame',
+    #                     difficulty = self.app.trivia_game_difficulty,
+    #                     back_button_text = '',
+    #                     button_text = 'התחל',
+    #                     title = 'משחק זכרון תמונות',
+    #                     photo_title = 'התבוננו וזכרו את פרטי התמונה',
+    #                     loaderText = '!בהצלחה',
+    #                     chosen_language = self.app.language[:2].lower(),
+    #                     end_game_text = 'End Game',
+    #                     loaderTime = loader_time,
+    #                     show_start_modal = True,
+    #                     start_button_timeout = 7.0,
+    #                     theme = UI_THEME_TYPE.WHITE,
+    #                     wait = False,
+    #                     feedback_callback_async = self.async_cb_feedback_games,
+    #                     finish_callback_async = self.async_cb_finish_games,
+    #                     custom_style = CUSTOM_STYLE_GAMES)
             
-        await self.play_sound_with_leds(
-                    f'VOICE_TRIVIA_GAME_{self.app.language}')
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_TRIVIA_GAME_{self.app.language}')
 
-        # Repeat the instructions every 10 seconds until the game started
-        num_instructions_reps = 0
-        last_feedback = self.app.games_feedback
-        start_time, current_time = time.time(), time.time()
-        while self.app.games_feedback['action'] != 'game-started' and \
-                                                    num_instructions_reps < 3:
-            await self.app.sleep(1.0)
-            current_time = time.time()
-            if abs(current_time - start_time) >= 30:
-                num_instructions_reps += 1
-                await self.play_sound_with_leds(
-                    f'VOICE_TRIVIA_GAME_{self.app.language}')
-                start_time = time.time()
+    #     # Repeat the instructions every 10 seconds until the game started
+    #     num_instructions_reps = 0
+    #     last_feedback = self.app.games_feedback
+    #     start_time, current_time = time.time(), time.time()
+    #     while self.app.games_feedback['action'] != 'game-started' and \
+    #                                                 num_instructions_reps < 3:
+    #         await self.app.sleep(1.0)
+    #         current_time = time.time()
+    #         if abs(current_time - start_time) >= 30:
+    #             num_instructions_reps += 1
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_TRIVIA_GAME_{self.app.language}')
+    #             start_time = time.time()
 
-        # Wait the countdown, speak the question
-        loader_start_time, loader_current_time = time.time(), time.time()
-        try:
-            await self.app.leds.turn_off_group('head')
-            await self.app.leds.animation(group = 'head',
-                                color = 'blue',
-                                animation = 'TIMER_COUNT_DOWN',
-                                speed = 10,
-                                repetitions = int(0.5*int(loader_time)),
-                                wait = False
-                                )
-        except Exception as e:
-            self.app.log.debug(f'Couldnt count down leds, got exception - {e}')
+    #     # Wait the countdown, speak the question
+    #     loader_start_time, loader_current_time = time.time(), time.time()
+    #     try:
+    #         await self.app.leds.turn_off_group('head')
+    #         await self.app.leds.animation(group = 'head',
+    #                             color = 'blue',
+    #                             animation = 'TIMER_COUNT_DOWN',
+    #                             speed = 10,
+    #                             repetitions = int(0.5*int(loader_time)),
+    #                             wait = False
+    #                             )
+    #     except Exception as e:
+    #         self.app.log.debug(f'Couldnt count down leds, got exception - {e}')
 
-        while abs(loader_current_time - loader_start_time) <= int(loader_time)-1:
-            loader_current_time = time.time()
-            await self.app.sleep(0.1)
+    #     while abs(loader_current_time - loader_start_time) <= int(loader_time)-1:
+    #         loader_current_time = time.time()
+    #         await self.app.sleep(0.1)
 
-        last_feedback = self.app.games_feedback.copy()
-        await self.play_sound_with_leds(f'VOICE_TRIVIA_Q1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
-        await self.play_sound_with_leds(f'VOICE_TRIVIA_A1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
+    #     last_feedback = self.app.games_feedback.copy()
+    #     await self.play_sound_with_leds(f'VOICE_TRIVIA_Q1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
+    #     await self.play_sound_with_leds(f'VOICE_TRIVIA_A1_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
 
-        # Measure the patient response time between instructions and start
-        self.app.memory_game_response_time = current_time - start_time
+    #     # Measure the patient response time between instructions and start
+    #     # self.app.memory_game_response_time = current_time - start_time
 
-        # Give the patient feedback until the game is complete
-        i, j = 1, 2
-        while self.app.games_feedback['action'] != 'game-completed':
-            # Correct card match feedback
-            if self.app.games_feedback['last_try_success'] and \
-                                    self.app.games_feedback != last_feedback:
+    #     # Give the patient feedback until the game is complete
+    #     i, j = 1, 2
+    #     while self.app.games_feedback['action'] != 'game-completed':
+    #         # Correct card match feedback
+    #         if self.app.games_feedback['last_try_success'] and \
+    #                                 self.app.games_feedback != last_feedback:
 
-                last_feedback = self.app.games_feedback.copy()       
-                voice = self.choose_random_success_voice()
-                await self.play_sound_with_leds(voice)
+    #             last_feedback = self.app.games_feedback.copy()       
+    #             voice = self.choose_random_success_voice()
+    #             await self.play_sound_with_leds(voice)
 
-                loader_start_time, loader_current_time = time.time(), time.time()
-                try:
-                    await self.app.leds.turn_off_group('head')
-                    await self.app.leds.animation(group = 'head',
-                                        color = 'blue',
-                                        animation = 'TIMER_COUNT_DOWN',
-                                        speed = 10,
-                                        repetitions = int(0.5*int(loader_time)),
-                                        wait = False
-                                        )
-                except Exception as e:
-                    self.app.log.debug(f'Couldnt count down leds, got exception - {e}')
+    #             loader_start_time, loader_current_time = time.time(), time.time()
+    #             try:
+    #                 await self.app.leds.turn_off_group('head')
+    #                 await self.app.leds.animation(group = 'head',
+    #                                     color = 'blue',
+    #                                     animation = 'TIMER_COUNT_DOWN',
+    #                                     speed = 10,
+    #                                     repetitions = int(0.5*int(loader_time)),
+    #                                     wait = False
+    #                                     )
+    #             except Exception as e:
+    #                 self.app.log.debug(f'Couldnt count down leds, got exception - {e}')
 
-                while abs(loader_current_time - loader_start_time) \
-                                                         <= int(loader_time)-1:
-                    loader_current_time = time.time()
-                    await self.app.sleep(0.1)
+    #             while abs(loader_current_time - loader_start_time) \
+    #                                                      <= int(loader_time)-1:
+    #                 loader_current_time = time.time()
+    #                 await self.app.sleep(0.1)
 
-                if j <= 3:
-                    await self.play_sound_with_leds(f'VOICE_TRIVIA_Q{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
-                    await self.play_sound_with_leds(f'VOICE_TRIVIA_A{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
-                j += 1
+    #             if j <= 3:
+    #                 await self.play_sound_with_leds(f'VOICE_TRIVIA_Q{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}')
+    #                 await self.play_sound_with_leds(f'VOICE_TRIVIA_A{j}_{self.app.trivia_game_difficulty.upper()}_{self.app.language}', wait = False)
+    #             j += 1
 
-            # Incorrect card match feedback
-            elif not self.app.games_feedback['last_try_success'] and \
-                                    self.app.games_feedback != last_feedback:
-                last_feedback = self.app.games_feedback.copy()            
+    #         # Incorrect card match feedback
+    #         elif not self.app.games_feedback['last_try_success'] and \
+    #                                 self.app.games_feedback != last_feedback:
+    #             last_feedback = self.app.games_feedback.copy()            
                
-                if i%2 == 0:
-                    voice = self.choose_random_fail_voice()
-                    await self.play_sound_with_leds(voice, wait = False)
-                i += 1
+    #             if i%2 == 0:
+    #                 voice = self.choose_random_fail_voice()
+    #                 await self.play_sound_with_leds(voice, wait = False)
+    #             i += 1
             
-            # Break if stop condition
-            if self.app.ui_button_feedback == 'button_pressed' or \
-                                            self.app.stop_condition is True:
-                break
+    #         # Break if stop condition
+    #         if self.app.ui_button_feedback == 'button_pressed' or \
+    #                                         self.app.stop_condition is True:
+    #             break
 
-            await self.app.sleep(1.0)
+    #         await self.app.sleep(1.0)
 
-        # Congratulate the patient upon game completion
-        await self.play_sound_with_leds(
-                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+    #     # Congratulate the patient upon game completion
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_GAME_COMPLETED_{self.app.language}')
         
-        # Analytics
-        end_time = time.time()
-        self.app.trivia_game_time = end_time - start_time
+    #     # Analytics
+    #     end_time = time.time()
+    #     # self.app.trivia_game_time = end_time - start_time
 
 
     
-    async def simon_game(self):
-        '''Open a simon says game session'''
+    # async def simon_game(self):
+    #     '''Open a simon says game session'''
 
-         # Reset feedback
-        self.reset_user_feedbacks()        
-        await self.app.ui.open_game(
-                        game = 'SimonGame',
-                        difficulty = self.app.simon_game_difficulty,
-                        back_button_text = '',
-                        button_text = 'התחל',
-                        title = 'המלך אמר',
-                        show_start_modal = True,
-                        start_button_timeout = 7.0,
-                        theme = UI_THEME_TYPE.WHITE,
-                        chosen_language = self.app.language[:2].lower(),
-                        end_game_text = 'End Game',
-                        wait = False,
-                        feedback_callback_async = self.async_cb_feedback_games,
-                        finish_callback_async = self.async_cb_finish_games,
-                        custom_style = CUSTOM_STYLE_GAMES
-                        )
+    #      # Reset feedback
+    #     self.reset_user_feedbacks()        
+    #     await self.app.ui.open_game(
+    #                     game = 'SimonGame',
+    #                     difficulty = self.app.simon_game_difficulty,
+    #                     back_button_text = '',
+    #                     button_text = 'התחל',
+    #                     title = 'המלך אמר',
+    #                     show_start_modal = True,
+    #                     start_button_timeout = 7.0,
+    #                     theme = UI_THEME_TYPE.WHITE,
+    #                     chosen_language = self.app.language[:2].lower(),
+    #                     end_game_text = 'End Game',
+    #                     wait = False,
+    #                     feedback_callback_async = self.async_cb_feedback_games,
+    #                     finish_callback_async = self.async_cb_finish_games,
+    #                     custom_style = CUSTOM_STYLE_GAMES
+    #                     )
         
-        # Explain the game
-        await self.play_sound_with_leds(
-                    f'VOICE_SIMON_GAME_{self.app.language}')
+    #     # Explain the game
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_SIMON_GAME_{self.app.language}')
        
-        # Repeat the instructions every 10 seconds until the game started
-        num_instructions_reps = 0
-        last_feedback = self.app.games_feedback
-        start_time, current_time = time.time(), time.time()
-        while self.app.games_feedback['action'] == None and  \
-                                                    num_instructions_reps < 3:
-            await self.app.sleep(1.0)
-            current_time = time.time()
-            if abs(current_time - start_time) >= 30:
-                num_instructions_reps += 1
-                await self.play_sound_with_leds(
-                    f'VOICE_SIMON_GAME_{self.app.language}')
-                start_time = time.time()
-        last_feedback = self.app.games_feedback
+    #     # Repeat the instructions every 10 seconds until the game started
+    #     num_instructions_reps = 0
+    #     last_feedback = self.app.games_feedback
+    #     start_time, current_time = time.time(), time.time()
+    #     while self.app.games_feedback['action'] == None and  \
+    #                                                 num_instructions_reps < 3:
+    #         await self.app.sleep(1.0)
+    #         current_time = time.time()
+    #         if abs(current_time - start_time) >= 30:
+    #             num_instructions_reps += 1
+    #             await self.play_sound_with_leds(
+    #                 f'VOICE_SIMON_GAME_{self.app.language}')
+    #             start_time = time.time()
+    #     last_feedback = self.app.games_feedback
 
         
-        # Give the patient feedback until the game is complete
-        last_stage = self.app.games_feedback['stage']
-        last_feedback = self.app.games_feedback.copy()
-        i, j = 0, 2
-        while self.app.games_feedback['action'] != 'game-completed':
-            # Incorrect card match feedback
-            if not self.app.games_feedback['last_try_success'] and \
-                                    self.app.games_feedback != last_feedback:
-                last_feedback = self.app.games_feedback.copy()                    
-                if i%2 == 0:
-                    voice = self.choose_random_fail_voice()
-                    await self.play_sound_with_leds(voice)
-                i += 1
+    #     # Give the patient feedback until the game is complete
+    #     last_stage = self.app.games_feedback['stage']
+    #     last_feedback = self.app.games_feedback.copy()
+    #     i, j = 0, 2
+    #     while self.app.games_feedback['action'] != 'game-completed':
+    #         # Incorrect card match feedback
+    #         if not self.app.games_feedback['last_try_success'] and \
+    #                                 self.app.games_feedback != last_feedback:
+    #             last_feedback = self.app.games_feedback.copy()                    
+    #             if i%2 == 0:
+    #                 voice = self.choose_random_fail_voice()
+    #                 await self.play_sound_with_leds(voice)
+    #             i += 1
 
-            # Break if stop condition
-            if self.app.ui_button_feedback == 'button_pressed' or \
-                                            self.app.stop_condition is True:
-                break
+    #         # Break if stop condition
+    #         if self.app.ui_button_feedback == 'button_pressed' or \
+    #                                         self.app.stop_condition is True:
+    #             break
 
-            await self.app.sleep(1.0)
+    #         await self.app.sleep(1.0)
 
-        # Congratulate the patient upon game completion
-        await self.play_sound_with_leds(
-                    f'VOICE_GAME_COMPLETED_{self.app.language}')
+    #     # Congratulate the patient upon game completion
+    #     await self.play_sound_with_leds(
+    #                 f'VOICE_GAME_COMPLETED_{self.app.language}')
         
 
 
-    async def scan_for_detection(self):
-        '''Move backwards and scan left \ right to search for detections'''
-        # running_tasks = [
-        #     self.app.motion.move_linear(distance = -0.2,
-        #                                 x_velocity = 0.05,
-        #                                 wait = True
-        #                                 ),
-        #     self.app.motion.rotate(angle = 20.0,
-        #                            angular_speed = 5.0,
-        #                            wait = True
-        #                            ),
-        #     self.app.motion.rotate(angle = -40.0,
-        #                            angular_speed = 5.0,
-        #                            wait = True
-        #                            )
-        # ]
-        running_tasks = [
-            self.move_linear_wrapper(distance = -0.2,
-                                           x_velocity = 0.05,
-                                           wait = True
-                                           ),
-            self.rotate_wrapper(angle = 20.0,
-                                angular_speed = 5.0,
-                                wait = True
-                                ),
-            self.rotate_wrapper(angle = -40.0,
-                                angular_speed = 5.0,
-                                wait = True
-                                )
-        ]
+    # async def scan_for_detection(self):
+    #     '''Move backwards and scan left \ right to search for detections'''
+    #     # running_tasks = [
+    #     #     self.app.motion.move_linear(distance = -0.2,
+    #     #                                 x_velocity = 0.05,
+    #     #                                 wait = True
+    #     #                                 ),
+    #     #     self.app.motion.rotate(angle = 20.0,
+    #     #                            angular_speed = 5.0,
+    #     #                            wait = True
+    #     #                            ),
+    #     #     self.app.motion.rotate(angle = -40.0,
+    #     #                            angular_speed = 5.0,
+    #     #                            wait = True
+    #     #                            )
+    #     # ]
+    #     running_tasks = [
+    #         self.move_linear_wrapper(distance = -0.2,
+    #                                        x_velocity = 0.05,
+    #                                        wait = True
+    #                                        ),
+    #         self.rotate_wrapper(angle = 20.0,
+    #                             angular_speed = 5.0,
+    #                             wait = True
+    #                             ),
+    #         self.rotate_wrapper(angle = -40.0,
+    #                             angular_speed = 5.0,
+    #                             wait = True
+    #                             )
+    #     ]
 
-        # Run tasks unless stop condition is met
-        for task in running_tasks:
-            if self.app.feet_detected:
-                break
-            else:
-                try:
-                    await task
-                except Exception as e:
-                    self.app.log.debug(
-                                f'got exception - {e} in scan_for_detection')
+    #     # Run tasks unless stop condition is met
+    #     for task in running_tasks:
+    #         if self.app.feet_detected:
+    #             break
+    #         else:
+    #             try:
+    #                 await task
+    #             except Exception as e:
+    #                 self.app.log.debug(
+    #                             f'got exception - {e} in scan_for_detection')
         
-        # Orient the robot's angle to be towards the patient after the scan
-        await self.app.nav.go_to_angle(self.app.angle_initial, 0.05, wait = True)
+    #     # Orient the robot's angle to be towards the patient after the scan
+    #     await self.app.nav.go_to_angle(self.app.angle_initial, 0.05, wait = True)
 
 
 
@@ -1964,39 +1964,39 @@ class Helpers:
         
     
 
-    def calculate_distance_to_image_center(self,
-                                           detection: dict,
-                                           image: np.array,
-                                           only_y: bool = False
-                                           ):
+    # def calculate_distance_to_image_center(self,
+    #                                        detection: dict,
+    #                                        image: np.array,
+    #                                        only_y: bool = False
+    #                                        ):
         
-        '''
-        Calculate the distance of a detection from the image center
-        INPUTS
-            detection - a dictionary with the detection's info
-            image - the image on which the detection was obtained
-            only_y - whether the distance should be calculated only on the y
-                    axis or not
+    #     '''
+    #     Calculate the distance of a detection from the image center
+    #     INPUTS
+    #         detection - a dictionary with the detection's info
+    #         image - the image on which the detection was obtained
+    #         only_y - whether the distance should be calculated only on the y
+    #                 axis or not
         
-        OUTPUTS
-            distance - the distance of the detection from the image's center
-        '''
-        # Calculate the center of the image
-        image_center_x, image_center_y = image.shape[0]/2, image.shape[1]/2
+    #     OUTPUTS
+    #         distance - the distance of the detection from the image's center
+    #     '''
+    #     # Calculate the center of the image
+    #     image_center_x, image_center_y = image.shape[0]/2, image.shape[1]/2
 
-        # Calculate the center of the face
-        face_center_x = detection['object_center_px'][0]
-        face_center_y = detection['object_center_px'][1]
+    #     # Calculate the center of the face
+    #     face_center_x = detection['object_center_px'][0]
+    #     face_center_y = detection['object_center_px'][1]
 
-        # Calculate the distance to the image center
-        if only_y:
-            distance = abs(face_center_y - image_center_y)
-            return distance
+    #     # Calculate the distance to the image center
+    #     if only_y:
+    #         distance = abs(face_center_y - image_center_y)
+    #         return distance
         
-        distance = math.sqrt((face_center_x - image_center_x)**2 + \
-                                        (face_center_y - image_center_y)**2)
+    #     distance = math.sqrt((face_center_x - image_center_x)**2 + \
+    #                                     (face_center_y - image_center_y)**2)
         
-        return distance
+    #     return distance
     
     
     async def prehome_motions(self):
@@ -2027,23 +2027,25 @@ class Helpers:
                     f'VOICE_PLEASE_TUCK_LEGS_1_{self.app.language}')
     
     
-    def callback_all_faces(self, detections, image):
-        if detections:
-            self.app.face_detections = sorted(detections,
-                key = lambda x: (self.calculate_distance_to_image_center(
-                                    x, image,
-                                    only_y = True),
-                                    -x['confidence'])
-                )
-            self.app.face_detections = [self.app.face_detections[0]]
+    # def callback_all_faces(self, detections, image):
+    #     if detections:
+    #         self.app.face_detections = sorted(detections,
+    #             key = lambda x: (self.calculate_distance_to_image_center(
+    #                                 x, image,
+    #                                 only_y = True),
+    #                                 -x['confidence'])
+    #             )
+    #         self.app.face_detections = [self.app.face_detections[0]]
        
 
 
     async def async_cb_sound(self, arg1, arg2, arg3):
-        self.app.can_play_sound = False
+        # self.app.can_play_sound = False
+        pass
 
     async def async_cb_finish_sound(self, status, status_msg):
-        self.app.can_play_sound = True
+        # self.app.can_play_sound = True
+        pass
     
 
     async def async_cb_feedback_sound(self, status, status_msg, status_id):
@@ -2053,44 +2055,44 @@ class Helpers:
     def cb_finish_sound(self, status, status_msg):
         pass
 
-    def cb_stinky_feet(self, predictions, image):
-        '''Callback used to obtain predictions'''
-        self.current_image = image                        
-        if predictions:
+    # def cb_stinky_feet(self, predictions, image):
+    #     '''Callback used to obtain predictions'''
+    #     self.current_image = image                        
+    #     if predictions:
 
-            # Sort predictions based on - 
-            # 1. distance from image center
-            # 2. distance from the robot
-            # 3. prediction confidence
-            sorted_detections = sorted(
-                                predictions,
-                                key = lambda x: \
-                                    (self.calculate_distance_to_image_center(
-                                                    x, image, only_y = True),
-                                        x['distance'],
-                                        -x['confidence']
-                                        )
-                                    )
+    #         # Sort predictions based on - 
+    #         # 1. distance from image center
+    #         # 2. distance from the robot
+    #         # 3. prediction confidence
+    #         sorted_detections = sorted(
+    #                             predictions,
+    #                             key = lambda x: \
+    #                                 (self.calculate_distance_to_image_center(
+    #                                                 x, image, only_y = True),
+    #                                     x['distance'],
+    #                                     -x['confidence']
+    #                                     )
+    #                                 )
 
-            # Filter the predictions based on threshold and size
-            filtered_predictions = [item for item in sorted_detections if \
-                    item['confidence'] >= FEET_DETECTION_THRESHOLD \
-                            and 0.01 < (item['height'] * item['width']) \
-                                                        < FEET_SIZE_THRESHOLD]
+    #         # Filter the predictions based on threshold and size
+    #         filtered_predictions = [item for item in sorted_detections if \
+    #                 item['confidence'] >= FEET_DETECTION_THRESHOLD \
+    #                         and 0.01 < (item['height'] * item['width']) \
+    #                                                     < FEET_SIZE_THRESHOLD]
             
 
-            # Take the first 2 items from the filtered predictions. They are
-            # assumed to be the feet of the patient
-            if len(filtered_predictions) > 0:
-                if len(filtered_predictions) > 2:
-                    filtered_predictions = filtered_predictions[:2]
-                self.app.distance_to_feet = \
-                    filtered_predictions[0]['center_point'][0] - DISTANCE_CONST
-                self.app.bbox_ymin = filtered_predictions[0]['y_min']
-                self.feet_queue.append(self.app.distance_to_feet)
-                self.app.feet_detected = True
-            else:
-                self.app.feet_detected = False
+    #         # Take the first 2 items from the filtered predictions. They are
+    #         # assumed to be the feet of the patient
+    #         if len(filtered_predictions) > 0:
+    #             if len(filtered_predictions) > 2:
+    #                 filtered_predictions = filtered_predictions[:2]
+    #             self.app.distance_to_feet = \
+    #                 filtered_predictions[0]['center_point'][0] - DISTANCE_CONST
+    #             self.app.bbox_ymin = filtered_predictions[0]['y_min']
+    #             self.feet_queue.append(self.app.distance_to_feet)
+    #             self.app.feet_detected = True
+    #         else:
+    #             self.app.feet_detected = False
             
     
     async def cb_motion(self, msg1 ,msg2, msg3, msg4):
@@ -2138,7 +2140,7 @@ class Helpers:
         # Set stop condition flag
         self.app.stop_condition = True
         self.app.stop_condition_counter += 1
-        self.app.press2reaction_time = time.time()
+        # self.app.press2reaction_time = time.time()
 
         # Stop playing sounds and turn off leds
         try:

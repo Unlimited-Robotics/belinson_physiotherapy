@@ -130,25 +130,25 @@ class Actions(BaseActions):
                                              MAX_APPROACH_ATTEMPTS)
 
 
-    async def enter_APPROACHING_FEET(self):
-        # Declare the state
-        self.app.last_state = 'APPROACHING_FEET'
+    # async def enter_APPROACHING_FEET(self):
+    #     # Declare the state
+    #     self.app.last_state = 'APPROACHING_FEET'
         
-        try:
-            # Execute approach to feet sequence
-            self.app.feet_approach_successful = \
-                                await self.helpers.stinky_feet_sequence()
+    #     try:
+    #         # Execute approach to feet sequence
+    #         self.app.feet_approach_successful = \
+    #                             await self.helpers.stinky_feet_sequence()
 
-            # If the approach wasn't successful, update the counter
-            if not self.app.feet_approach_successful:
-                self.app.approach_attempts += 1
+    #         # If the approach wasn't successful, update the counter
+    #         if not self.app.feet_approach_successful:
+    #             self.app.approach_attempts += 1
 
-        except Exception as e:
-            self.app.current_error = e
-            await self.helpers.error_messanger('APPROACHING_FEET',
-                                               e,
-                                               self.app.approach_attempts,
-                                               MAX_APPROACH_ATTEMPTS)
+    #     except Exception as e:
+    #         self.app.current_error = e
+    #         await self.helpers.error_messanger('APPROACHING_FEET',
+    #                                            e,
+    #                                            self.app.approach_attempts,
+    #                                            MAX_APPROACH_ATTEMPTS)
 
 
 
@@ -303,8 +303,8 @@ class Actions(BaseActions):
                                             animation = 'MOTION_2',
                                             wait = False)
             start_time = time.time()
-            self.app.press2reaction_time = round(abs(start_time - self.app.press2reaction_time), 2)
-            self.app.press2reaction_times.append(self.app.press2reaction_time)
+            # self.app.press2reaction_time = round(abs(start_time - self.app.press2reaction_time), 2)
+            # self.app.press2reaction_times.append(self.app.press2reaction_time)
 
             treatment_stop_feedback = \
                 await self.app.ui.display_choice_selector(
@@ -319,7 +319,7 @@ class Actions(BaseActions):
            
             # Analytics
             end_time = time.time()
-            self.app.user_stop_states.append(self.app.last_state)
+            # self.app.user_stop_states.append(self.app.last_state)
             self.app.stop_condition_timers.append(end_time - start_time)
     
 

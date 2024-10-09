@@ -142,7 +142,7 @@ class RayaApplication(RayaApplicationBase):
 
     async def finish(self):
         # Finishing instructions
-        await self.test_specific_component('chest_button')
+        # await self.test_specific_component('chest_button')
         await self.fleet.finish_task(task_id = str(self.task_id),
                                      result = FLEET_FINISH_STATUS.SUCCESS)
         self.log.warn(f'FSM nurse_aid_fsm finished')
@@ -226,14 +226,14 @@ class RayaApplication(RayaApplicationBase):
         self.sessions_attempts = 0
         self.sessions_successful = False
         self.stop_treatment = False
-        self.feet_detected = False
-        self.bbox_ymin = 0
-        self.distance_to_feet = -1
+        # self.feet_detected = False
+        # self.bbox_ymin = 0
+        # self.distance_to_feet = -1
         self.bad_id = False
-        self.face_detections = {}      
-        self.dynamic_recordings_list = []
-        self.one_time_action_flag = True
-        self.feet_approach_successful = False
+        # self.face_detections = {}      
+        # self.dynamic_recordings_list = []
+        # self.one_time_action_flag = True
+        # self.feet_approach_successful = False
         self.navigation_attempts = 1
         self.nav_feedback = None
         self.stop_fleet = False
@@ -241,8 +241,8 @@ class RayaApplication(RayaApplicationBase):
         self.ui_button_feedback_id = None
         self.video_feedback = None
         self.games_feedback = None
-        self.can_play_sound = True
-        self.dev_mode_state = None
+        # self.can_play_sound = True
+        # self.dev_mode_state = None
         self.dev_mode_flag = False
         self.path_available = False
         self.belinson_approach_feedback = {'skill_success' : None,
@@ -252,7 +252,7 @@ class RayaApplication(RayaApplicationBase):
         # Analytics for Daniel
         self.obstacle_counter = 1
         self.fleet_request_counter = 0
-        self.touch_item_time = 0
+        # self.touch_item_time = 0
         self.touch_item = None
         self.treatment_feedback_time = None
         self.user_feedback = None
@@ -261,100 +261,100 @@ class RayaApplication(RayaApplicationBase):
         self.stop_condition_timers = []
         self.exit_choice = None
         self.exit_choice_human_format = {}
-        self.user_stop_states = []
-        self.memory_game_response_time = 0     
-        self.memory_game_time = 0
-        self.difference_game_response_time = 0
-        self.difference_game_time = 0
-        self.trivia_game_time = 0
-        self.end_to_end_time, self.end_to_end_timer = 0, time.time()
-        self.end_to_end_success = False
+        # self.user_stop_states = []
+        # self.memory_game_response_time = 0     
+        # self.memory_game_time = 0
+        # self.difference_game_response_time = 0
+        # self.difference_game_time = 0
+        # self.trivia_game_time = 0
+        # self.end_to_end_time, self.end_to_end_timer = 0, time.time()
+        # self.end_to_end_success = False
 
         # Chest button component test variables
         self.button_press_success = False
         self.exit_choices = []
-        self.press2reaction_time = None
-        self.press2reaction_times = []
+        # self.press2reaction_time = None
+        # self.press2reaction_times = []
 
-    async def test_specific_component(self, component_name):
-        '''
-        Test a specific component in the application and get a spreadsheet
-        containing the results from each run
-        '''
+    # async def test_specific_component(self, component_name):
+    #     '''
+    #     Test a specific component in the application and get a spreadsheet
+    #     containing the results from each run
+    #     '''
 
-        # Get date and time
-        month = time.strftime('%B')
-        month_day = time.strftime('%d')
-        hour = str(int(time.strftime('%I')) + 3)
-        minute = time.strftime('%M')
-        path = f'{DATA_PATH}/{component_name}.csv'
+    #     # Get date and time
+    #     month = time.strftime('%B')
+    #     month_day = time.strftime('%d')
+    #     hour = str(int(time.strftime('%I')) + 3)
+    #     minute = time.strftime('%M')
+    #     path = f'{DATA_PATH}/{component_name}.csv'
 
-        # Choose data based on the component you want to test
-        if component_name == 'chest_button':
-            if int(self.stop_condition_counter) == 0:
-                self.log.debug(f'Chest button was not pressed. Not saving run...')
-                return
+    #     # Choose data based on the component you want to test
+    #     if component_name == 'chest_button':
+    #         if int(self.stop_condition_counter) == 0:
+    #             self.log.debug(f'Chest button was not pressed. Not saving run...')
+    #             return
             
-            data = {'Number of presses' : int(self.stop_condition_counter),
-                'State of Button Press' : self.last_state,
-                'Button Press Success' : self.button_press_success,
-                'Exit Choices' : self.exit_choices,
-                'Press to Reaction Times [s]' : self.press2reaction_times,
-                'Date & Time' : f'{month_day}/{month} | {hour}:{minute}',
-                'Fail Reason' : ''
-                }
+    #         data = {'Number of presses' : int(self.stop_condition_counter),
+    #             'State of Button Press' : self.last_state,
+    #             'Button Press Success' : self.button_press_success,
+    #             'Exit Choices' : self.exit_choices,
+    #             'Press to Reaction Times [s]' : self.press2reaction_times,
+    #             'Date & Time' : f'{month_day}/{month} | {hour}:{minute}',
+    #             'Fail Reason' : ''
+    #             }
 
-        # Add fail reason
-        if not self.button_press_success:
-            data['Fail Reason'] = input('Please enter fail reason:')
+    #     # Add fail reason
+    #     if not self.button_press_success:
+    #         data['Fail Reason'] = input('Please enter fail reason:')
 
-        # Create the log if it doesn't exist, otherwise update it
-        if check_file_exists(path):
-            existing_df = pd.read_csv(resolve_path(path))
-        else:
-            existing_df = pd.DataFrame(columns = data.keys())
+    #     # Create the log if it doesn't exist, otherwise update it
+    #     if check_file_exists(path):
+    #         existing_df = pd.read_csv(resolve_path(path))
+    #     else:
+    #         existing_df = pd.DataFrame(columns = data.keys())
 
-        df = pd.DataFrame.from_dict(data, orient = 'index').T
-        combined_df = pd.concat([existing_df, df], ignore_index = True)
-        csv_string = combined_df.to_csv(index = False)
-        with open_file(path, 'w') as f:
-            f.write(csv_string)
-        self.log.info(f'Saved component test: {component_name} to path: {path}')
+    #     df = pd.DataFrame.from_dict(data, orient = 'index').T
+    #     combined_df = pd.concat([existing_df, df], ignore_index = True)
+    #     csv_string = combined_df.to_csv(index = False)
+    #     with open_file(path, 'w') as f:
+    #         f.write(csv_string)
+    #     self.log.info(f'Saved component test: {component_name} to path: {path}')
 
 
-    async def save_run(self):
-        month = time.strftime('%B')
-        month_day = time.strftime('%d')
-        week_day = time.strftime('%A')
-        hour = str(int(time.strftime('%I')) + 2)
-        minute = time.strftime('%M')
-        current_time = [month, month_day, week_day, hour, minute]
+    # async def save_run(self):
+    #     month = time.strftime('%B')
+    #     month_day = time.strftime('%d')
+    #     week_day = time.strftime('%A')
+    #     hour = str(int(time.strftime('%I')) + 2)
+    #     minute = time.strftime('%M')
+    #     current_time = [month, month_day, week_day, hour, minute]
 
-        timestamp = ''
-        for elem in current_time:
-            timestamp = f'{timestamp}_{elem}'
+    #     timestamp = ''
+    #     for elem in current_time:
+    #         timestamp = f'{timestamp}_{elem}'
 
-        path = f'{DATA_PATH}/data{timestamp}.csv'
-        data = {'Obstacles' : str(self.obstacle_counter - 1),
-                'Fleet Requests' : str(self.fleet_request_counter),
-                'Touch Item' : str(self.touch_item),
-                'Touch Item Time [s]' : str(self.touch_item_time),
-                'Treatment Feedback' : str(self.user_feedback),
-                'Treatment Feedback Time [s]' : str(self.treatment_feedback_time),
-                'User verified' : str(self.user_verification_successful),
-                'Exit Choice' : str(self.exit_choice),
-                'State in Exit Choice' : str(self.user_stop_states),
-                'Memory Game Time [s]' : str(self.memory_game_time),
-                'Memory Game Response Time [s]' : str(self.memory_game_response_time),
-                'Chest Button Pressed' : int(self.stop_condition_counter),
-                'Total App Time [s]' : str(self.end_to_end_time),
-                'E2E Success' : str(self.end_to_end_success),
-                }
+    #     path = f'{DATA_PATH}/data{timestamp}.csv'
+    #     data = {'Obstacles' : str(self.obstacle_counter - 1),
+    #             'Fleet Requests' : str(self.fleet_request_counter),
+    #             'Touch Item' : str(self.touch_item),
+    #             'Touch Item Time [s]' : str(self.touch_item_time),
+    #             'Treatment Feedback' : str(self.user_feedback),
+    #             'Treatment Feedback Time [s]' : str(self.treatment_feedback_time),
+    #             'User verified' : str(self.user_verification_successful),
+    #             'Exit Choice' : str(self.exit_choice),
+    #             'State in Exit Choice' : str(self.user_stop_states),
+    #             'Memory Game Time [s]' : str(self.memory_game_time),
+    #             'Memory Game Response Time [s]' : str(self.memory_game_response_time),
+    #             'Chest Button Pressed' : int(self.stop_condition_counter),
+    #             'Total App Time [s]' : str(self.end_to_end_time),
+    #             'E2E Success' : str(self.end_to_end_success),
+    #             }
         
-        df = pd.DataFrame.from_dict(data, orient = 'index').T
-        csv_string = df.to_csv(index = False)
-        with open_file(path, 'w') as f:
-            f.write(csv_string)
+    #     df = pd.DataFrame.from_dict(data, orient = 'index').T
+    #     csv_string = df.to_csv(index = False)
+    #     with open_file(path, 'w') as f:
+    #         f.write(csv_string)
 
 
     # update_audio dictionary to include the patient's name
@@ -477,7 +477,7 @@ class RayaApplication(RayaApplicationBase):
         self.debug = args.debug_flag
         self.language = args.language.upper()
         
-        self.treatment_time = 6
+        # self.treatment_time = 6
 
         # Conver target goal to dict
         if args.target_goal:
