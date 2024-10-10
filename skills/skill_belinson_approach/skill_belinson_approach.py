@@ -85,7 +85,7 @@ class SkillBelinsonApproach(RayaFSMSkill):
             cameras_controller = self.cameras
         )
         self.face_detections = {}
-        await self.sleep(2.0)
+        await self.sleep(3.0)
 
 
     async def enter_SCAN_FOR_DETECTIONS(self):
@@ -98,7 +98,7 @@ class SkillBelinsonApproach(RayaFSMSkill):
         for i in range(2):
             if self.face_detections:
                 break
-            sign = 1 if (i+1)%2 == 0 else 1
+            sign = 1 if (i+1)%2 == 0 else -1
             rotation_params['angular_speed'] *= sign*(i+1)
             await self.motion.rotate(**rotation_params)
 
@@ -107,58 +107,32 @@ class SkillBelinsonApproach(RayaFSMSkill):
         self.last_state = 'APPROACH_FACE'
 
          # Calculate navigation point to face
-        current_detection = self.face_detections[0]
-        face_position = current_detection['center_point_map']
-
-        goal_predict = Pose()
-        goal_predict.position = Point(x = face_position[0],
-                                    y = face_position[1],
-                                    z = face_position[2])
-        target_angle = self.inverse_angle(self.execute_args['face_angle'])
-        quat = tf_transformations.quaternion_from_euler(        
-                                                0.0,
-                                                0.0,
-                                                np.deg2rad(target_angle)
+        self.current_face_detection = self.face_detections[0]
+        self.required_distance = self.execute_args['distance_to_goal']
+        projected_point = self.get_projected_detection_point(
+                                                self.current_face_detection,
+                                                self.execute_args['face_angle'],
+                                                self.required_distance
                                                 )
-        goal_predict.orientation = Quaternion(x=quat[0], y=quat[1],
-                                                z=quat[2], w=quat[3]
-                                                )
+       
+        # Navigate towards the patient
+        try:
+            await self.navigation_sequence(
+                x = projected_point.x,
+                y = projected_point.y,
+                angle = self.execute_args['face_angle'],
+                pos_unit = POSITION_UNIT.METERS,
+                ang_unit = ANGLE_UNIT.DEGREES,
+                wait = True,
+                callback_feedback = self.cb_nav_feedback,
+                callback_finish = self.cb_nav_finish,
+                close_to_position = self.close_to_position
+            )
+            self.face_approach_success = True
 
-        projected_point = self.get_projected_point(
-                    detection_pose = goal_predict,
-                    distance = self.execute_args['distance_to_goal']
-                    ).point
-        
-        # Check if the path to the calculated point is available
-        path_available = await self.check_path_available(
-                                                projected_point.x,
-                                                projected_point.y,
-                                                self.execute_args['face_angle']
-                                                )
-
-        # Compute the desired coordinates to navigate to
-        if path_available and not self.nav.is_navigating():
-            path_available = False
-
-            # Navigate towards the patient
-            try:
-                await self.navigation_sequence(
-                    x = projected_point.x,
-                    y = projected_point.y,
-                    angle = self.execute_args['face_angle'],
-                    pos_unit = POSITION_UNIT.METERS,
-                    ang_unit = ANGLE_UNIT.DEGREES,
-                    wait = True,
-                    callback_feedback = self.cb_nav_feedback,
-                    callback_finish = self.cb_nav_finish,
-                    close_to_position = self.close_to_position
-                )
-                self.face_approach_success = True
-
-            except Exception as e:
-                self.face_approach_success = False
-        else:
+        except Exception as e:
             self.face_approach_success = False
+        
 
     async def enter_DETECT_FEET(self):
         self.last_state = 'DETECT_FEET'
@@ -249,8 +223,8 @@ class SkillBelinsonApproach(RayaFSMSkill):
         self.lidar.create_obstacle_listener(
                 listener_name = 'obstacle',
                 callback = self.callback_obstacle,
-                lower_angle = -10,
-                upper_angle = 10,
+                lower_angle = -20,
+                upper_angle = 20,
                 upper_distance = DISTANCE_CONST, 
                 ang_unit=ANGLE_UNIT.DEGREES,
             )
@@ -408,6 +382,9 @@ class SkillBelinsonApproach(RayaFSMSkill):
         self.feet_bad_detection = False
         self.close_to_position = False
         self.last_state = None
+        self.current_face_detection = None
+        self.target_angle = None
+        self.required_distance = None
 
 
     async def get_lidar_data(self, lower_angle, upper_angle):
@@ -471,6 +448,36 @@ class SkillBelinsonApproach(RayaFSMSkill):
         return inverse
 
 
+
+    def get_projected_detection_point(self,
+                                      detection,
+                                      detection_angle,
+                                      required_distance
+                                      ):
+        detection_position = detection['center_point_map']
+        goal_predict = Pose()
+        goal_predict.position = Point(x = detection_position[0],
+                                    y = detection_position[1],
+                                    z = detection_position[2]
+                                    )
+        target_angle = self.inverse_angle(self.execute_args['face_angle'])
+
+        quat = tf_transformations.quaternion_from_euler(        
+                                                0.0,
+                                                0.0,
+                                                np.deg2rad(target_angle)
+                                                )
+        goal_predict.orientation = Quaternion(x=quat[0], y=quat[1],
+                                                z=quat[2], w=quat[3]
+                                                )
+
+        return self.get_projected_point(
+                    detection_pose = goal_predict,
+                    distance = required_distance
+                    ).point
+
+
+
     def get_projected_point(self,
                             detection_pose: Pose,
                             distance: float
@@ -505,32 +512,6 @@ class SkillBelinsonApproach(RayaFSMSkill):
         return projected_point     
 
 
-    async def check_path_available(self,
-                                   x,
-                                   y,
-                                   angle,
-                                   pos_unit = POSITION_UNIT.METERS,
-                                   ang_unit = ANGLE_UNIT.DEGREES
-                                   ):
-        try:
-            await self.nav.navigate_to_position( 
-                x = float(x), 
-                y = float(y), 
-                angle = float(angle), 
-                pos_unit = pos_unit, 
-                ang_unit = ang_unit,
-                callback_feedback = self.cb_nav_feedback,
-                callback_finish = self.cb_nav_finish,
-                options={"behavior_tree": "compute_path"},
-                wait=True,
-            )
-            self.log.debug(f'path {x, y, angle} available!')
-            return True
-        except Exception as e:
-            self.log.debug(f'path {x, y, angle} not available!')
-            return False    
-        
-
     def check_final_queue(self,
                           queue: deque
                           ):
@@ -549,6 +530,34 @@ class SkillBelinsonApproach(RayaFSMSkill):
         return weighted_average
     
 
+    async def check_path_available(self,
+                                   x,
+                                   y,
+                                   angle,
+                                   pos_unit,
+                                   ang_unit,
+                                   callback_feedback,
+                                   callback_finish
+                                   ):
+        try:
+            await self.nav.navigate_to_position( 
+                x = float(x), 
+                y = float(y), 
+                angle = float(angle), 
+                pos_unit = pos_unit, 
+                ang_unit = ang_unit,
+                callback_feedback = callback_feedback,
+                callback_finish = callback_finish,
+                options={"behavior_tree": "compute_path"},
+                wait = True
+            )
+            self.app.log.debug(f'path {x, y, angle} available!')
+            return True
+        except Exception as e:
+            self.app.log.debug(f'path {x, y, angle} not available!')
+            return False    
+
+
     async def navigation_sequence(self,
                             x,
                             y,
@@ -559,7 +568,7 @@ class SkillBelinsonApproach(RayaFSMSkill):
                             callback_feedback,
                             callback_finish,
                             close_to_position = False,
-                            max_radius = 0.8
+                            d_dist = 0.075,
                             ):
         
         if not close_to_position:
@@ -574,49 +583,55 @@ class SkillBelinsonApproach(RayaFSMSkill):
                 callback_finish = callback_finish
             )
         
+        # Try to navigate close to the desired position
         else:
-
-            self.app.log.debug('/'*50)
-            self.app.log.debug(f'Requested position: {x}, {y}, {angle}')
-
+            # Set params
+            required_distance = self.required_distance
             path_available = False
-            dx = 1 if pos_unit == POSITION_UNIT.PIXELS else 0.05
-            dy = 1 if pos_unit == POSITION_UNIT.PIXELS else 0.05
-            sign = 1
+           
+            # Check path availability on a line in front of the patient
+            while not path_available:
+                for idx in LINE_IDX:
+                    new_distance = required_distance + idx*d_dist
 
-            for xi in range(5):
-                for yi in range(5):
+                    print('='*50)
+                    print(f'new distance is: {new_distance}')
+                    print('='*50)
 
-                    if path_available:
-                        break
-
-                    new_x = x + xi*sign*dx
-                    new_y = y + yi*sign*dy
-                    
+                    new_point = self.get_projected_detection_point(
+                                                self.current_face_detection,
+                                                angle,
+                                                new_distance
+                                                )
                     path_available = await self.check_path_available(
-                                        x = new_x,
-                                        y = new_y,
+                                        x = new_point.x,
+                                        y = new_point.y,
                                         angle = angle,
                                         pos_unit = pos_unit,
                                         ang_unit = ang_unit,
                                         callback_feedback = callback_feedback,
                                         callback_finish = callback_finish
                                         )
-                    sign *= -1
+                            
+                    # Try to navigate to the new found position
+                    if path_available:
+                        try:
+                            await self.nav.navigate_to_position(
+                            x = new_point.x,
+                            y = new_point.y,
+                            angle = angle,
+                            pos_unit = pos_unit,
+                            ang_unit = ang_unit,
+                            wait = wait,
+                            callback_feedback = callback_feedback,
+                            callback_finish = callback_finish
+                            )
+                            return
 
-            if path_available:
-                await self.nav.navigate_to_position(
-                x = new_x,
-                y = new_y,
-                angle = angle,
-                pos_unit = pos_unit,
-                ang_unit = ang_unit,
-                wait = wait,
-                callback_feedback = callback_feedback,
-                callback_finish = callback_finish
-            )
-                
-            else:
+                        except Exception as e:
+                            path_available = False
+        
+                # If the whole grid was checked and path isnt available, raise error
                 raise RayaNoPathToGoal
         
     # =============================== Callbacks =============================== #
