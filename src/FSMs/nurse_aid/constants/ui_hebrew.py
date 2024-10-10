@@ -675,7 +675,7 @@ UI_PHYSIO_TEAM = {
 
 UI_VIDEOS_END = {
     'title' : 'כל הכבוד על המאמץ וההתמדה ותודה רבה על שיתוף הפעולה. נתראה בתרגול הבא!',
-    'subtitle' : '',
+    'subtitle' : 'צוות הפיזיותרפיה: יוחאי ניזרי ואדוה קופר',
     'show_loader' : False,
     'back_button_text' : '',
     'theme' : UI_THEME_TYPE.WHITE,
