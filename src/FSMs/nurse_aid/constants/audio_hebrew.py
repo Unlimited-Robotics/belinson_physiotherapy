@@ -623,7 +623,7 @@ VOICE_SHOULDER_FRACTURE_HEBREW = {
 }
 
 VOICE_MIMIC_VIDEO_HEBREW = {
-    'text' : 'אנא עקבו אחרי ההוראות בסרטון ובצעו אותן.',
+    'text' : 'אנא השתדלו לבצע את התנועה כפי שמוצגת בסרטון ההדגמה.',
     'language' : 'he-IL',
     'name' : 'he-IL-Wavenet-D',
     'file_name' : 'VOICE_MIMIC_VIDEO_HEBREW'

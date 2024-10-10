@@ -30,7 +30,7 @@ class Actions(BaseActions):
         await self.helpers.create_listeners()
 
         # Get the session time
-        await self.helpers.acquire_session_time()
+        # await self.helpers.acquire_session_time()
 
         # Reset the user feedbacks
         self.helpers.reset_user_feedbacks()
@@ -194,15 +194,19 @@ class Actions(BaseActions):
         
         try:
             # Pre video interactions
+            await self.app.ui.display_screen(**UI_PREVIDEO_1)
             await self.helpers.play_sound_with_leds(
                 f'VOICE_PREVIDEO_1_{self.app.language}')
             
+            await self.app.ui.display_screen(**UI_PREVIDEO_2)
             await self.helpers.play_sound_with_leds(
                 f'VOICE_PREVIDEO_2_{self.app.language}')
             
+            await self.app.ui.display_screen(**UI_MIMIC_VIDEO)
             await self.helpers.play_sound_with_leds(
                 f'VOICE_MIMIC_VIDEO_{self.app.language}')
             
+            await self.app.ui.display_screen(**UI_PHYSIO_TEAM)
             await self.helpers.play_sound_with_leds(
                 f'VOICE_PHYSIO_TEAM_{self.app.language}')
                
@@ -240,13 +244,14 @@ class Actions(BaseActions):
                             f'VOICE_NEXT_VIDEO_{self.app.language}')
                            
             # End of treatment
+            await self.app.ui.display_screen(**UI_VIDEOS_END)
             await self.helpers.play_sound_with_leds(
                 f'VOICE_END_VIDEOS_{self.app.language}'
                 )
             await self.app.ui.display_screen(**UI_NAVIGATING_TO_HOME)
-            await self.helpers.play_sound_with_leds(
-                f'VOICE_AFTER_FEEDBACK_{self.app.language}'
-                )
+            # await self.helpers.play_sound_with_leds(
+            #     f'VOICE_AFTER_FEEDBACK_{self.app.language}'
+            #     )
             self.app.sessions_successful = True
 
         except Exception as e:

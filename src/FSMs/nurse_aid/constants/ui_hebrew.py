@@ -31,6 +31,13 @@ CUSTOM_STYLE = {'title' : {'font-size' : '150px'},
                                         'backgroundSize' : 'cover'}
                 }
 
+CUSTOM_STYLE_LONG_TEXT = {'title' : {'font-size' : '100px'},
+                        'subtitle' : {'font-size' : '70px'},
+                        'background' : {'background' : background_url,
+                                        'backgroundRepeat' : 'no-repeat',
+                                        'backgroundSize' : 'cover'}
+                }
+
 CUSTOM_STYLE_GAMES = {'title' : {'font-size' : '75px'},
                       'image' : {'height' : '80%',
                                  'width' : '80%',
@@ -670,7 +677,7 @@ UI_PHYSIO_TEAM = {
     'show_loader' : False,
     'back_button_text' : '',
     'theme' : UI_THEME_TYPE.WHITE,
-    'custom_style' : CUSTOM_STYLE
+    'custom_style' : CUSTOM_STYLE_LONG_TEXT
 }
 
 UI_VIDEOS_END = {
@@ -679,7 +686,7 @@ UI_VIDEOS_END = {
     'show_loader' : False,
     'back_button_text' : '',
     'theme' : UI_THEME_TYPE.WHITE,
-    'custom_style' : CUSTOM_STYLE
+    'custom_style' : CUSTOM_STYLE_LONG_TEXT
 }
 
 UI_MIMIC_VIDEO = {
@@ -688,8 +695,27 @@ UI_MIMIC_VIDEO = {
     'show_loader' : False,
     'back_button_text' : '',
     'theme' : UI_THEME_TYPE.WHITE,
-    'custom_style' : CUSTOM_STYLE
+    'custom_style' : CUSTOM_STYLE_LONG_TEXT
 }
+
+UI_PREVIDEO_1 = {
+    'title': 'אתם עומדים לצפות בהדגמה של תרגילים לצורך שיפור התנועה והתפקוד. ביצוע התרגילים מצריך ישיבה זקופה ככל יכולתכם.',
+    'subtitle' : '',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE_LONG_TEXT
+}
+
+UI_PREVIDEO_2 = {
+    'title': 'במידה ואתם חווים כאבים, או קושי רב בביצוע, אנא המתינו לסיום התרגיל ועברו לתרגיל הבא אחריו.',
+    'subtitle' : '',
+    'show_loader' : False,
+    'back_button_text' : '',
+    'theme' : UI_THEME_TYPE.WHITE,
+    'custom_style' : CUSTOM_STYLE_LONG_TEXT
+}
+
 
 
 SCREENS_HEBREW = {'UI_NAVIGATING_TO_HOME' : UI_NAVIGATING_TO_HOME,
@@ -734,5 +760,7 @@ SCREENS_HEBREW = {'UI_NAVIGATING_TO_HOME' : UI_NAVIGATING_TO_HOME,
                     'UI_REQUEST_FLEET_HELP' : UI_REQUEST_FLEET_HELP,
                     'UI_PHYSIO_TEAM' : UI_PHYSIO_TEAM,
                     'UI_VIDEOS_END' : UI_VIDEOS_END,
-                    'UI_MIMIC_VIDEO' : UI_MIMIC_VIDEO
+                    'UI_MIMIC_VIDEO' : UI_MIMIC_VIDEO,
+                    'UI_PREVIDEO_1' : UI_PREVIDEO_1,
+                    'UI_PREVIDEO_2' : UI_PREVIDEO_2
                 }
